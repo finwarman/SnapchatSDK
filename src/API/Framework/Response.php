@@ -8,6 +8,8 @@ use Snapchat\API\Framework\Curl\Curl;
 class Response {
 
     const OK = 200;
+    const CREATED = 201;
+    const ACCEPTED = 202;
     const BAD_REQUEST = 400;
     const UNAUTHORIZED = 401;
     const FORBIDDEN = 403;
@@ -84,7 +86,7 @@ class Response {
      * @return bool
      */
     public function isOK(){
-        return $this->getCode() == self::OK;
+        return in_array($this->getCode(), array(self::OK, self::CREATED, self::ACCEPTED));
     }
 
 }

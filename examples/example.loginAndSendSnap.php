@@ -16,6 +16,12 @@ try {
     //Send Snap
     $snapchat->sendMedia($uploadPayload, 10, array("recipient"));
 
+    //Send Snap (and set as Story)
+    //$snapchat->sendMedia($uploadPayload, 10, array("recipient"), true);
+
+    //Set Story only
+    //$snapchat->sendMedia($uploadPayload, 10, array(), true);
+
 } catch(Exception $e){
     //Something went wrong...
     echo $e->getMessage() . "\n";
