@@ -794,7 +794,7 @@ class Snapchat {
             throw new \Exception("You must be logged in to call downloadStory().");
         }
 
-        return $this->downloadStoryById($story->getMediaId(), $story->getMediaKey(), $story->getMediaId(), $file, $file_overlay, $story->isZipped());
+        return $this->downloadStoryById($story->getMediaId(), $story->getMediaKey(), $story->getMediaIv(), $file, $file_overlay, $story->isZipped());
 
     }
 

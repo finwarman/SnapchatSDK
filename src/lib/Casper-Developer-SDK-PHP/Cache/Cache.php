@@ -34,8 +34,8 @@ abstract class Cache {
 
         if(isset($data[$key])){
 
-            $value = $data["value"];
-            $expires = $data["expires"];
+            $value = $data[$key]["value"];
+            $expires = $data[$key]["expires"];
 
             if($expires < time()){
                 $this->clearValue($key);
@@ -130,6 +130,8 @@ abstract class Cache {
             "value" => $value,
             "expires" => $expires
         );
+
+        $this->saveCache($data);
 
     }
 
