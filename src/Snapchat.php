@@ -27,6 +27,7 @@ use Snapchat\API\Request\UpdateStoriesRequest;
 use Snapchat\API\Request\UploadMediaRequest;
 use Snapchat\API\Request\PhoneVerifyRequest;
 use Snapchat\API\Response\FriendsResponse;
+use Snapchat\API\Response\Model\AddedFriend;
 use Snapchat\API\Response\Model\Conversation;
 use Snapchat\API\Response\Model\Friend;
 use Snapchat\API\Response\Model\Snap;
@@ -677,6 +678,33 @@ class Snapchat {
         $request = new FriendRequest($this, $username);
         $request->unblock();
         return $request->execute();
+
+    }
+
+    /**
+     *
+     * Get a list of AddedFriends that you haven't added back.
+     *
+     * @return API\Response\Model\AddedFriend[]
+     * @throws \Exception
+     */
+    public function getFriendRequests(){
+
+        if(!$this->isLoggedIn()){
+            throw new \Exception("You must be logged in to call getFriendRequests().");
+        }
+
+        $friendRequests = array();
+        $friendsResponse = $this->getCachedFriendsResponse();
+
+        foreach($friendsResponse->getAddedFriends() as $addedFriend){
+            $friendType = $addedFriend->getType();
+            if($friendType == AddedFriend::TYPE_PENDING || $friendType == AddedFriend::TYPE_FOLLOWING){
+                $friendRequests[] = $addedFriend;
+            }
+        }
+
+        return $friendRequests;
 
     }
 
