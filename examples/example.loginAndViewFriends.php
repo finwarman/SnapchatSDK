@@ -12,7 +12,18 @@ try {
     //Login
     $snapchat->login("username", "password");
 
-    $friendRequests = $snapchat->getFriendRequests();
+    $friendsResponse = $snapchat->getCachedFriendsResponse();
+
+    //Friends that you added
+    $friends = $friendsResponse->getFriends();
+
+    //Friends that added you.
+    $friendRequests = $friendsResponse->getAddedFriends();
+
+    foreach($friends as $friend){
+        echo sprintf("You added %s to your friends list!\n", $friend->getName());
+    }
+
     foreach($friendRequests as $friendRequest){
 
         $friendType = $friendRequest->getType();
