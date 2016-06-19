@@ -46,21 +46,6 @@ try {
 
     }
 
-    //Iterate My Stories
-    foreach($storiesResponse->getMyStories() as $myStories){
-
-        $story = $myStories->getStory(); //The Story object
-        $storyNotes = $myStories->getStoryNotes(); //Details about who viewed your Story
-        $storyExtras = $myStories->getStoryExtras(); //View and Screenshot counts
-
-        //Where to Save the Story
-        $filename = sprintf("download/stories/%s.%s", $story->getId(), $story->getFileExtension());
-
-        //Download the Story
-        $mediapath = $snapchat->downloadStory($story, $filename);
-
-    }
-
 } catch(Exception $e){
     //Something went wrong...
     echo $e->getMessage() . "\n";
