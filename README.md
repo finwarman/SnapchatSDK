@@ -18,7 +18,7 @@ To get started using the SDK, you will need to include the AutoLoader script.
 
 Since we rely on the Casper Developer API, we need to provide an instance of `CasperDeveloperAPI` to the `Snapchat` constructor.
 
-```
+```php
 require("./src/autoload.php");
 $casper = new \Casper\Developer\CasperDeveloperAPI("api_key", "api_secret");
 $snapchat = new \Snapchat\Snapchat($casper);
@@ -38,7 +38,7 @@ Take a look at the [Examples folder](./examples).
 
 To login, you will need to provide your Snapchat Username and Snapchat Password. If something goes wrong, an `Exception` will be thrown.
 
-```
+```php
 try {
 
     $login = $snapchat->login("username", "password");
@@ -51,7 +51,7 @@ try {
 
 Once you have logged in, the `$login` object will provide direct access to all of the fetched data. Such as Snaps, Conversations, Stories and Friends.
 
-```
+```php
 $conversations = $login->getConversationsResponse(); //Snaps and Chat Messages
 $friendsResponse = $login->getFriendsResponse(); //Friends, Friend Requests
 $updatesResponse = $login->getUpdatesResponse(); //AuthToken, Score, Birthday, etc
@@ -66,13 +66,13 @@ If you save the Username and AuthToken, you can create a new instance of the `Sn
 
 You can get the Username and AuthToken from a logged in `Snapchat` instance with `getUsername` and `getAuthToken`, for saving somewhere...
 
-```
+```php
 //Save these somewhere. Database etc.
 $username = $snapchat->getUsername();
 $authToken = $snapchat->getAuthToken();
 ```
 
-```
+```php
 //New Instance somewhere else. example, another PHP file.
 $snapchat->initWithAuthToken("username", "auth_token");
 ```
@@ -81,7 +81,7 @@ When using the AuthToken method, you don't have access to the `$login` object.
 
 You will need to use the methods with similar names on the `$snapchat` object instead.
 
-```
+```php
 $conversations = $snapchat->getConversations(); //Snaps and Chat Messages
 $friendsResponse = $snapchat->getCachedFriendsResponse(); //Friends, Friend Requests
 $updatesResponse = $snapchat->getAllUpdates(); //AuthToken, Score, Birthday, etc
@@ -92,13 +92,13 @@ $storiesResponse = $snapchat->getStories(); //Your Stories and Friends Stories
 
 Friend data is provided in the response of multiple API calls, but not it's own endpoint. You can access the currently cached Friend data like so:
 
-```
+```php
 $snapchat->getCachedFriendsResponse();
 ```
 
 If you need to fetch updated Friend data from the server, you will need to call the `getAllUpdates` method.
 
-```
+```php
 $friendsResponse = $snapchat->getAllUpdates()->getFriendsResponse(); //Friends, Friend Requests
 ```
 
@@ -110,7 +110,7 @@ Snaps and Chat Messages are both located within `ConversationMessages`. Here's a
 
 ####Get all unviewed received Snaps
 
-```
+```php
 foreach($conversations as $conversation){
 
     $snaps = $conversation->getConversationMessages()->getSnaps();
@@ -137,7 +137,7 @@ File extensions are not automatically appended to the file name for you. If you 
 
 If everything goes successfully, the `downloadSnap` method will return a `MediaPath` object, which contains the File Paths of the Saved media. (Blob and Overlay). Otherwise an `Exception` will be thrown on Failure...
 
-```
+```php
 $snap = ...;
 
 $filename = sprintf("my_snap_folder/%s.%s", $snap->getId(), $snap->getFileExtension());
@@ -154,7 +154,7 @@ if($mediapath->overlayExists()){
 
 ####Download all unviewed received Snaps
 
-```
+```php
 $conversations = $login->getConversationsResponse();
 foreach($conversations as $conversation){
 
@@ -185,7 +185,7 @@ foreach($conversations as $conversation){
 
 ####Download My Stories
 
-```
+```php
 //Get Stories from Login Response
 $storiesResponse = $login->getStoriesResponse();
 
@@ -216,7 +216,7 @@ Calling `getStories()` method on the `FriendStory` object will return the `Frien
 
 A `FriendStoryContainer` gives you access to the `Story` object posted by the user along with a boolean stating if you have seen the Story.
 
-```
+```php
 //Get Stories from Login Response
 $storiesResponse = $login->getStoriesResponse();
 
@@ -247,6 +247,14 @@ foreach($storiesResponse->getFriendStories() as $friendStories){
     }
 
 }
+```
+
+###Logout
+
+To logout of Snapchat, call the `logout` method on the `Snapchat` instance.
+
+```php
+$snapchat->logout();
 ```
 
 ##Documentation
