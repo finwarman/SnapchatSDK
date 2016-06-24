@@ -14,6 +14,7 @@ use Snapchat\API\Request\FindFriendsRequest;
 use Snapchat\API\Request\FriendRequest;
 use Snapchat\API\Request\GetCaptchaRequest;
 use Snapchat\API\Request\LoginRequest;
+use Snapchat\API\Request\LogoutRequest;
 use Snapchat\API\Request\Model\SendMediaPayload;
 use Snapchat\API\Request\Model\UploadMediaPayload;
 use Snapchat\API\Request\RegisterRequest;
@@ -1297,6 +1298,23 @@ class Snapchat {
         }
 
         return $this->getDeviceToken();
+
+    }
+
+    /**
+     *
+     * Logout
+     *
+     * @throws \Exception
+     */
+    public function logout(){
+
+        if(!$this->isLoggedIn()){
+            throw new \Exception("You must be logged in to call logout().");
+        }
+
+        $request = new LogoutRequest($this);
+        $request->execute();
 
     }
 
