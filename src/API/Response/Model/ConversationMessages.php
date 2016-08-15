@@ -80,7 +80,7 @@ class ConversationMessages {
 
         foreach($this->getMessages() as $message){
             if($message->isChatMessage()){
-                $snaps[] = $message->getChatMessage();
+                $chats[] = $message->getChatMessage();
             }
         }
 
