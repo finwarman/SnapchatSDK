@@ -3,12 +3,12 @@
 namespace Snapchat\API\Request;
 
 use Snapchat\API\Response\SolveCaptchaResponse;
-use Snapchat\Snapchat;
+use Snapchat\SnapchatClient;
 
 class SolveCaptchaRequest extends AuthenticatedBaseRequest {
 
     /**
-     * @param $snapchat Snapchat
+     * @param $snapchat SnapchatClient
      * @param $id string Captcha Id you are Solving
      * @param $solution string The Solution to this Captcha
      */

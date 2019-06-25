@@ -5,7 +5,7 @@ use Snapchat\Util\FileUtil;
 require("../src/autoload.php");
 
 $casper = new \Casper\Developer\CasperDeveloperAPI("api_key", "api_secret");
-$snapchat = new \Snapchat\Snapchat($casper);
+$snapchat = new \Snapchat\SnapchatClient($casper);
 
 try {
 

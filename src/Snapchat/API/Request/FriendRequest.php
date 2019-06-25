@@ -4,7 +4,7 @@ namespace Snapchat\API\Request;
 
 use Snapchat\API\Response\FriendResponse;
 use Snapchat\API\Response\Model\Friend;
-use Snapchat\Snapchat;
+use Snapchat\SnapchatClient;
 
 class FriendRequest extends AuthenticatedBaseRequest {
 
@@ -18,7 +18,7 @@ class FriendRequest extends AuthenticatedBaseRequest {
     const KEY_IDENTITY_PROFILE_ADD_FRIENDS_BY_USERNAME_PAGE = "PROFILE_ADD_FRIENDS_BY_USERNAME_PAGE";
 
     /**
-     * @param $snapchat Snapchat
+     * @param $snapchat SnapchatClient
      * @param $username string Friend Username
      */
     public function __construct($snapchat, $username){

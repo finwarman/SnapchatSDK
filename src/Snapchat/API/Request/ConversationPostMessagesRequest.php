@@ -3,12 +3,12 @@
 namespace Snapchat\API\Request;
 
 use Snapchat\API\Response\Model\ChatMessage;
-use Snapchat\Snapchat;
+use Snapchat\SnapchatClient;
 
 class ConversationPostMessagesRequest extends AuthenticatedBaseRequest {
 
     /**
-     * @param $snapchat Snapchat
+     * @param $snapchat SnapchatClient
      * @param $messages ChatMessage[] Chat Messages to Send
      */
     public function __construct($snapchat, $messages){

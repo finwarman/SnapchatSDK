@@ -3,7 +3,7 @@
 namespace Snapchat\API\Request;
 
 use Snapchat\Crypto\StoryCrypto;
-use Snapchat\Snapchat;
+use Snapchat\SnapchatClient;
 
 class AuthStoryBlobRequest extends AuthenticatedBaseRequest {
 
@@ -11,7 +11,7 @@ class AuthStoryBlobRequest extends AuthenticatedBaseRequest {
     private $mediaIv;
 
     /**
-     * @param $snapchat Snapchat
+     * @param $snapchat SnapchatClient
      * @param $mediaId string Story Media ID
      * @param $mediaKey string Story Media Key
      * @param $mediaIv string Story Media IV

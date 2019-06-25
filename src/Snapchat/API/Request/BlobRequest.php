@@ -2,12 +2,12 @@
 
 namespace Snapchat\API\Request;
 
-use Snapchat\Snapchat;
+use Snapchat\SnapchatClient;
 
 class BlobRequest extends AuthenticatedBaseRequest {
 
     /**
-     * @param $snapchat Snapchat
+     * @param $snapchat SnapchatClient
      * @param $id string Snap ID to Download
      */
     public function __construct($snapchat, $id){

@@ -2,12 +2,12 @@
 
 namespace Snapchat\API\Request;
 
-use Snapchat\Snapchat;
+use Snapchat\SnapchatClient;
 
 class ClearConversationRequest extends AuthenticatedBaseRequest {
 
     /**
-     * @param $snapchat Snapchat
+     * @param $snapchat SnapchatClient
      * @param $conversationId string Conversation ID
      */
     public function __construct($snapchat, $conversationId){

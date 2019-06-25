@@ -3,13 +3,19 @@
 
 namespace Snapchat\API\Framework;
 
-use Snapchat\API\Framework\Curl\Curl;
-use Snapchat\Util\JsonMapper\JsonMapper;
+use GuzzleHttp\Client;
+use JsonMapper;
 
-abstract class Request {
-
+abstract class Request
+{
     const GET = 0;
     const POST = 1;
+
+    /**
+     * Used to send HTTP requests.
+     * @var Client
+     */
+    private $client;
 
     /**
      * Used for Mapping response Json to Class instances.
@@ -25,19 +31,24 @@ abstract class Request {
 
     /**
      * Proxy used for Requests
-     * @var string
+     * @var bool
      */
     private $verifyPeer = true;
 
     /**
      * @var array HTTP Headers to send in Request
      */
-    private $headers = array();
+    private $headers = [];
 
     /**
      * @var array Parameters to send in Request
      */
-    private $params = array();
+    private $params = [];
+
+    /**
+     * @var array Files to send in Request
+     */
+    private $files = [];
 
     /**
      * @return string Request Method
@@ -49,7 +60,9 @@ abstract class Request {
      */
     public abstract function getUrl();
 
-    public function __construct(){
+    public function __construct($client)
+    {
+        $this->client = $client;
         $this->mapper = new JsonMapper();
     }
 
@@ -57,7 +70,8 @@ abstract class Request {
      * Set Proxy to be used for Requests
      * @param $proxy string
      */
-    public function setProxy($proxy){
+    public function setProxy($proxy)
+    {
         $this->proxy = $proxy;
     }
 
@@ -65,7 +79,8 @@ abstract class Request {
      * Enable/Disable SSL Verification of Peer
      * @param $verifyPeer boolean
      */
-    public function setVerifyPeer($verifyPeer){
+    public function setVerifyPeer($verifyPeer)
+    {
         $this->verifyPeer = $verifyPeer;
     }
 
@@ -76,7 +91,8 @@ abstract class Request {
      * @param $key string Header Key
      * @param $value string Header Value
      */
-    public function addHeader($key, $value){
+    public function addHeader($key, $value)
+    {
         $this->headers[$key] = $value;
     }
 
@@ -87,7 +103,8 @@ abstract class Request {
      * @param $key string Parameter Key
      * @param $value string Parameter Value
      */
-    public function addParam($key, $value){
+    public function addParam($key, $value)
+    {
         $this->params[$key] = $value;
     }
 
@@ -98,29 +115,34 @@ abstract class Request {
      * @param $key string File Key
      * @param $file RequestFile
      */
-    public function addFile($key, $file){
-        $this->params[$key] = new \CURLFile($file->getPath(), $file->getMime(), $file->getName());
+    public function addFile($key, $file)
+    {
+        $this->files[$key] = $file;
     }
 
     /**
      * @return array Request Headers
      */
-    public function getHeaders(){
+    public function getHeaders()
+    {
         return $this->headers;
     }
 
     /**
      * @return array Request Parameters
      */
-    public function getParams(){
+    public function getParams()
+    {
         return $this->params;
     }
 
-    public function clearHeaders(){
+    public function clearHeaders()
+    {
         return $this->headers = array();
     }
 
-    public function clearParams(){
+    public function clearParams()
+    {
         return $this->params = array();
     }
 
@@ -131,57 +153,57 @@ abstract class Request {
      * @return Response The Response
      * @throws \Exception
      */
-    public function execute(){
+    public function execute()
+    {
+        $response = null;
+        $options = [
+            'verify' => $this->verifyPeer,
+            'proxy' => $this->proxy,
+            'headers' => $this->getHeaders()
+        ];
 
-        $data = null;
-        $curl = new Curl();
+        switch ($this->getMethod()) {
+            case self::GET:
+            {
+                $response = $this->client->get($this->getUrl(), array_merge($options, [
+                    'query' => $this->getParams()
+                ]));
+                break;
+            }
 
-        $curl->setOpt(CURLOPT_SSL_VERIFYPEER, $this->verifyPeer);
+            case self::POST:
+            {
+                if (sizeof($this->files) != 0) {
+                    $options['multipart'] = [];
 
-        if($this->proxy != null){
-            $curl->setOpt(CURLOPT_PROXY, $this->proxy);
-        }
+                    foreach ($this->getParams() as $k => $v) {
+                        array_push($options['multipart'], [
+                            'name' => $k,
+                            'contents' => $v,
+                        ]);
+                    }
 
-        foreach($this->getHeaders() as $key => $value){
-            $curl->setHeader($key, $value);
-        }
-
-        $error_format = "Snapchat Request failed: [%s] [%s] %s";
-
-        switch($this->getMethod()){
-
-            case self::GET: {
-
-                $data = $curl->get($this->getUrl(), $this->getParams());
-
-                if($curl->error){
-                    throw new \Exception(sprintf($error_format, "GET", $this->getUrl(), $curl->errorMessage));
+                    foreach ($this->files as $k => $v) {
+                        array_push($options['multipart'], [
+                            'name' => $v->getName(),
+                            'contents' => fopen($v->getPath(), 'r'),
+                            'filename' => $v->getName()
+                        ]);
+                    }
+                } else {
+                    $options['form_params'] = $this->getParams();
                 }
 
+                $response = $this->client->post($this->getUrl(), $options);
                 break;
-
             }
 
-            case self::POST: {
-
-                $data = $curl->post($this->getUrl(), $this->getParams());
-
-                if($curl->error){
-                    throw new \Exception(sprintf($error_format, "POST", $this->getUrl(), $curl->errorMessage));
-                }
-
-                break;
-
+            default:
+            {
+                throw new \Exception("Unsupported Request Method");
             }
-
-            default: {
-                throw new \Exception(sprintf($error_format, "UNKNOWN", $this->getUrl(), "Unsupported Request Method"));
-            }
-
         }
 
-        return new Response($curl, $data);
-
+        return new Response($response, \GuzzleHttp\json_decode($response->getBody()->getContents()));
     }
-
 }

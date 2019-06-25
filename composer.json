@@ -21,6 +21,8 @@
         }
     },
     "require": {
-        "guzzlehttp/guzzle": "^6.2"
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "^6.2",
+        "netresearch/jsonmapper": "v1.4.0"
     }
 }

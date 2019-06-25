@@ -3,12 +3,12 @@
 namespace Snapchat\API\Request;
 
 use Snapchat\API\Response\ConversationsResponse;
-use Snapchat\Snapchat;
+use Snapchat\SnapchatClient;
 
 class ConversationsRequest extends AuthenticatedBaseRequest {
 
     /**
-     * @param $snapchat Snapchat
+     * @param $snapchat SnapchatClient
      * @param $offset string The offset for fetching more Conversations
      */
     public function __construct($snapchat, $offset = null){

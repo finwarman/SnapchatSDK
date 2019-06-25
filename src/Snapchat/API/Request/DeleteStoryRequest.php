@@ -2,12 +2,12 @@
 
 namespace Snapchat\API\Request;
 
-use Snapchat\Snapchat;
+use Snapchat\SnapchatClient;
 
 class DeleteStoryRequest extends AuthenticatedBaseRequest {
 
     /**
-     * @param $snapchat Snapchat
+     * @param $snapchat SnapchatClient
      * @param $storyId string Story Id
      */
     public function __construct($snapchat, $storyId){

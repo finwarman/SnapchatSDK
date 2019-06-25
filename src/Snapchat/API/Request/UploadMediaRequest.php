@@ -4,7 +4,7 @@ namespace Snapchat\API\Request;
 
 use Snapchat\API\Framework\RequestFile;
 use Snapchat\API\Request\Model\UploadMediaPayload;
-use Snapchat\Snapchat;
+use Snapchat\SnapchatClient;
 
 class UploadMediaRequest extends AuthenticatedBaseRequest {
 
@@ -14,7 +14,7 @@ class UploadMediaRequest extends AuthenticatedBaseRequest {
     private $payload;
 
     /**
-     * @param $snapchat Snapchat
+     * @param $snapchat SnapchatClient
      * @param $payload UploadMediaPayload
      */
     public function __construct($snapchat, $payload){

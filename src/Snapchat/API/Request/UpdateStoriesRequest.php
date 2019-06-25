@@ -2,7 +2,7 @@
 
 namespace Snapchat\API\Request;
 
-use Snapchat\Snapchat;
+use Snapchat\SnapchatClient;
 use Snapchat\Util\RequestUtil;
 
 class UpdateStoriesRequest extends AuthenticatedBaseRequest {
@@ -12,7 +12,7 @@ class UpdateStoriesRequest extends AuthenticatedBaseRequest {
     private $screenshot = false;
 
     /**
-     * @param $snapchat Snapchat
+     * @param $snapchat SnapchatClient
      * @param $storyId string Story Id
      */
     public function __construct($snapchat, $storyId){

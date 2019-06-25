@@ -2,7 +2,8 @@
 
 namespace Snapchat;
 
-use Casper\Developer\CasperDeveloperAPI;
+use GuzzleHttp\Client;
+use Picaboooo\PicabooooClient;
 use Snapchat\API\Request\AllUpdatesRequest;
 use Snapchat\API\Request\AuthStoryBlobRequest;
 use Snapchat\API\Request\BlobRequest;
@@ -41,7 +42,7 @@ use Snapchat\Model\MediaPath;
 use Snapchat\Util\RequestUtil;
 use Snapchat\Util\StringUtil;
 
-class Snapchat {
+class SnapchatClient {
 
     /**
      *
@@ -92,10 +93,16 @@ class Snapchat {
     private $dtoken1v;
 
     /**
-     * Casper Developer API instance
-     * @var CasperDeveloperAPI
+     * Picaboooo instance
+     * @var PicabooooClient
      */
-    private $casper;
+    private $picaboo;
+
+    /**
+     * HTTP client
+     * @var Client
+     */
+    private $client;
 
     /**
      * HTTP Proxy to be used for Snapchat API Requests
@@ -109,19 +116,20 @@ class Snapchat {
      */
     private $verifyPeer = true;
 
-    /**
-     * @param $casper CasperDeveloperAPI
-     */
-    public function __construct($casper){
-        $this->setCasper($casper);
+    public function __construct()
+    {
+        $this->picaboo = new PicabooooClient($this);
+        $this->client = new Client();
     }
 
-    public function initWithAuthToken($username, $auth_token){
+    public function initWithAuthToken($username, $auth_token)
+    {
         $this->username = $username;
         $this->auth_token = $auth_token;
     }
 
-    public function initDeviceToken($dtoken1i, $dtoken1v){
+    public function initDeviceToken($dtoken1i, $dtoken1v)
+    {
         $this->dtoken1i = $dtoken1i;
         $this->dtoken1v = $dtoken1v;
     }
@@ -183,19 +191,19 @@ class Snapchat {
     }
 
     /**
-     * Set the CasperDeveloperAPI instance to use
-     * @param $casper CasperDeveloperAPI
+     * Get the PicabooooClient instance to use
+     * @return PicabooooClient
      */
-    public function setCasper($casper){
-        $this->casper = $casper;
+    public function getPicaboo(){
+        return $this->picaboo;
     }
 
     /**
-     * Get the CasperDeveloperAPI instance to use
-     * @return CasperDeveloperAPI
+     * @return Client
      */
-    public function getCasper(){
-        return $this->casper;
+    public function getClient()
+    {
+        return $this->client;
     }
 
     /**
@@ -1270,8 +1278,8 @@ class Snapchat {
      * @return DeviceToken
      * @throws \Exception
      */
-    public function getDeviceToken(){
-
+    public function getDeviceToken()
+    {
         $request = new DeviceTokenRequest($this);
         $response = $request->execute();
 
@@ -1280,7 +1288,6 @@ class Snapchat {
 
         $this->initDeviceToken($dtoken1i, $dtoken1v);
         return new DeviceToken($dtoken1i, $dtoken1v);
-
     }
 
     /**

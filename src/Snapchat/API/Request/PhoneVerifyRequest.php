@@ -48,7 +48,7 @@ class PhoneVerifyRequest extends AuthenticatedBaseRequest {
         return new PhoneVerifyResponse();
     }
 
-    public function casperAuthCallback($endpointAuth){
+    public function picabooAuthCallback($endpointAuth){
 
         $params = $endpointAuth["params"];
 

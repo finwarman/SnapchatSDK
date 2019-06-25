@@ -2,8 +2,8 @@
 
 namespace Snapchat\API\Framework;
 
-class RequestFile {
-
+class RequestFile
+{
     /**
      * @var string File Path
      */
@@ -19,7 +19,8 @@ class RequestFile {
      */
     private $name;
 
-    public function __construct($path, $mime, $name){
+    public function __construct($path, $mime, $name)
+    {
         $this->path = $path;
         $this->mime = $mime;
         $this->name = $name;
@@ -28,22 +29,24 @@ class RequestFile {
     /**
      * @return string File Path
      */
-    public function getPath(){
+    public function getPath()
+    {
         return $this->path;
     }
 
     /**
      * @return string Mime Type
      */
-    public function getMime(){
+    public function getMime()
+    {
         return $this->mime;
     }
 
     /**
      * @return string Name
      */
-    public function getName(){
+    public function getName()
+    {
         return $this->name;
     }
-
 }

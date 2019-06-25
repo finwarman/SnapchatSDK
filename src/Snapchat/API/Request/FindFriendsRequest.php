@@ -3,12 +3,12 @@
 namespace Snapchat\API\Request;
 
 use Snapchat\API\Response\FindFriendsResponse;
-use Snapchat\Snapchat;
+use Snapchat\SnapchatClient;
 
 class FindFriendsRequest extends AuthenticatedBaseRequest {
 
     /**
-     * @param $snapchat Snapchat
+     * @param $snapchat SnapchatClient
      * @param $country string Country Code. US, NZ, AU etc...
      * @param $query array Array of Names and Numbers to lookup. Format: array("number" => "name"); Maximum of 30 per Request.
      */

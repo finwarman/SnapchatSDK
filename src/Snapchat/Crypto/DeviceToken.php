@@ -2,8 +2,8 @@
 
 namespace Snapchat\Crypto;
 
-class DeviceToken {
-
+class DeviceToken
+{
     /**
      * @var string Device Token Identifier
      */
@@ -19,7 +19,8 @@ class DeviceToken {
      */
     private $dsig;
 
-    public function __construct($dtoken1i, $dtoken1v){
+    public function __construct($dtoken1i, $dtoken1v)
+    {
         $this->dtoken1i = $dtoken1i;
         $this->dtoken1v = $dtoken1v;
     }
@@ -33,7 +34,8 @@ class DeviceToken {
      * @param $timestamp string Login Request Timestamp
      * @param $request_token string Login Request Token
      */
-    public function initDeviceSignature($username, $password, $timestamp, $request_token){
+    public function initDeviceSignature($username, $password, $timestamp, $request_token)
+    {
         $data = sprintf("%s|%s|%s|%s", $username, $password, $timestamp, $request_token);
         $this->dsig = substr(hash_hmac("sha256", $data, $this->dtoken1v), 0, 20);
     }
@@ -41,29 +43,32 @@ class DeviceToken {
     /**
      * @return string Device Token Identifier
      */
-    public function getDeviceTokenIdentifier(){
+    public function getDeviceTokenIdentifier()
+    {
         return $this->dtoken1i;
     }
 
     /**
      * @return string Device Token Verifier
      */
-    public function getDeviceTokenVerifier(){
+    public function getDeviceTokenVerifier()
+    {
         return $this->dtoken1v;
     }
 
     /**
      * @return string Device Signature
      */
-    public function getDeviceSignature(){
+    public function getDeviceSignature()
+    {
         return $this->dsig;
     }
 
     /**
      * @return string Device Unique ID
      */
-    public function getDeviceUniqueID(){
+    public function getDeviceUniqueID()
+    {
         return base64_encode(sha1($this->dtoken1i, true));
     }
-
 }

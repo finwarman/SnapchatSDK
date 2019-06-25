@@ -3,7 +3,7 @@
 namespace Snapchat\API\Request;
 
 use Snapchat\API\Response\RegisterResponse;
-use Snapchat\Snapchat;
+use Snapchat\SnapchatClient;
 
 class RegisterRequest extends BaseRequest {
 
@@ -11,7 +11,7 @@ class RegisterRequest extends BaseRequest {
     private $password;
 
     /**
-     * @param $snapchat Snapchat
+     * @param $snapchat SnapchatClient
      * @param $email string Email Address
      * @param $password string Password
      * @param $birthday string Birthday (format: YYYY-MM-DD)
@@ -45,7 +45,7 @@ class RegisterRequest extends BaseRequest {
         return new RegisterResponse();
     }
 
-    public function casperAuthCallback($endpointAuth){
+    public function picabooAuthCallback($endpointAuth){
 
         $params = $endpointAuth["params"];
 

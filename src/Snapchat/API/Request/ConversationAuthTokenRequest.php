@@ -3,12 +3,12 @@
 namespace Snapchat\API\Request;
 
 use Snapchat\API\Response\ConversationAuthTokenResponse;
-use Snapchat\Snapchat;
+use Snapchat\SnapchatClient;
 
 class ConversationAuthTokenRequest extends AuthenticatedBaseRequest {
 
     /**
-     * @param $snapchat Snapchat
+     * @param $snapchat SnapchatClient
      * @param $conversationId string Conversation ID
      */
     public function __construct($snapchat, $conversationId){

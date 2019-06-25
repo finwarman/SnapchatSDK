@@ -3,10 +3,10 @@
 
 namespace Snapchat\API\Framework;
 
-use Snapchat\API\Framework\Curl\Curl;
+use Psr\Http\Message\ResponseInterface;
 
-class Response {
-
+class Response
+{
     const OK = 200;
     const CREATED = 201;
     const ACCEPTED = 202;
@@ -15,9 +15,9 @@ class Response {
     const FORBIDDEN = 403;
 
     /**
-     * @var Curl Curl Object
+     * @var ResponseInterface Guzzle response
      */
-    private $curl;
+    private $response;
 
     /**
      * @var object Response Data;
@@ -25,11 +25,12 @@ class Response {
     private $data;
 
     /**
-     * @param $curl Curl
+     * @param $response ResponseInterface
      * @param $data
      */
-    public function __construct($curl, $data){
-        $this->curl = $curl;
+    public function __construct($response, $data)
+    {
+        $this->response = $response;
         $this->data = $data;
     }
 
@@ -39,8 +40,9 @@ class Response {
      *
      * @return int Response Code
      */
-    public function getCode(){
-        return $this->curl->httpStatusCode;
+    public function getCode()
+    {
+        return $this->response->getStatusCode();
     }
 
     /**
@@ -49,7 +51,8 @@ class Response {
      *
      * @return object Response Data
      */
-    public function getData(){
+    public function getData()
+    {
         return $this->data;
     }
 
@@ -59,24 +62,16 @@ class Response {
      *
      * @return array Response Data
      */
-    public function getHeaders(){
-
-        $headers = $this->curl->responseHeaders;
-
-        if($headers != null){
-            return $headers;
-        }
-
-        return array();
-
+    public function getHeaders()
+    {
+        return $this->response->getHeaders();
     }
 
-    public function getContentDispositionFilename(){
-
+    public function getContentDispositionFilename()
+    {
         $headers = $this->getHeaders();
         parse_str($headers["Content-Disposition"], $results);
         return $results["attachment;filename"];
-
     }
 
     /**
@@ -85,8 +80,8 @@ class Response {
      *
      * @return bool
      */
-    public function isOK(){
+    public function isOK()
+    {
         return in_array($this->getCode(), array(self::OK, self::CREATED, self::ACCEPTED));
     }
-
 }

@@ -4,12 +4,12 @@ namespace Snapchat\API\Request;
 
 use Snapchat\API\Constants;
 use Snapchat\API\Response\RegisterUsernameResponse;
-use Snapchat\Snapchat;
+use Snapchat\SnapchatClient;
 
 class RegisterUsernameRequest extends AuthenticatedBaseRequest {
 
     /**
-     * @param $snapchat Snapchat
+     * @param $snapchat SnapchatClient
      * @param $username string Username chosen for this Account
      */
     public function __construct($snapchat, $username){

@@ -2,16 +2,17 @@
 
 namespace Snapchat\API\Request;
 
-use Casper\Developer\Exception\CasperException;
+use Picaboooo\PicabooooException;
 use Snapchat\API\Constants;
 use Snapchat\API\Framework\Request;
 use Snapchat\API\Framework\Response;
-use Snapchat\Snapchat;
+use Snapchat\SnapchatClient;
 
-abstract class BaseRequest extends Request {
+abstract class BaseRequest extends Request
+{
 
     /**
-     * @var Snapchat
+     * @var SnapchatClient
      */
     public $snapchat;
 
@@ -21,11 +22,11 @@ abstract class BaseRequest extends Request {
     private $response;
 
     /**
-     * @param $snapchat Snapchat The Snapchat instance to make the Request with.
+     * @param $snapchat SnapchatClient The Snapchat instance to make the Request with.
      */
-    public function __construct($snapchat){
-
-        parent::__construct();
+    public function __construct($snapchat)
+    {
+        parent::__construct($snapchat->getClient());
 
         $this->addHeader("Accept-Language", "en");
         $this->addHeader("Accept-Locale", "en_US");
@@ -33,13 +34,13 @@ abstract class BaseRequest extends Request {
         $this->setSnapchat($snapchat);
         $this->setProxy($snapchat->getProxy());
         $this->setVerifyPeer($snapchat->shouldVerifyPeer());
-
     }
 
     /**
-     * @param $snapchat Snapchat Snapchat Instance to use for this Request
+     * @param $snapchat SnapchatClient Snapchat Instance to use for this Request
      */
-    public function setSnapchat($snapchat){
+    public function setSnapchat($snapchat)
+    {
         $this->snapchat = $snapchat;
     }
 
@@ -51,14 +52,16 @@ abstract class BaseRequest extends Request {
     /**
      * @return string Username
      */
-    public function getUsername(){
+    public function getUsername()
+    {
         return "";
     }
 
     /**
      * @return string AuthToken
      */
-    public function getAuthToken(){
+    public function getAuthToken()
+    {
         return Constants::STATIC_TOKEN;
     }
 
@@ -67,11 +70,13 @@ abstract class BaseRequest extends Request {
      */
     public abstract function getResponseObject();
 
-    public function getUrl(){
+    public function getUrl()
+    {
         return Constants::BASE_URL . $this->getEndpoint();
     }
 
-    public function parseResponse(){
+    public function parseResponse()
+    {
         return true;
     }
 
@@ -80,7 +85,8 @@ abstract class BaseRequest extends Request {
      * @param $response Response
      * @return bool If the Response was intercepted, and should stop being processed.
      */
-    public function interceptResponse($response){
+    public function interceptResponse($response)
+    {
         return false;
     }
 
@@ -88,11 +94,13 @@ abstract class BaseRequest extends Request {
      * This method will be called before the Snapchat API request is made.
      * @param $endpointEndpointAuth object EndpointAuth from Casper Response
      */
-    public function casperAuthCallback($endpointEndpointAuth){
+    public function picabooAuthCallback($endpointEndpointAuth)
+    {
 
     }
 
-    public function getCachedResponse(){
+    public function getCachedResponse()
+    {
         return $this->response;
     }
 
@@ -101,40 +109,38 @@ abstract class BaseRequest extends Request {
      * Execute the Request
      *
      * @return object Response Data
-     * @throws CasperException
+     * @throws PicabooooException
      * @throws \Exception
      */
-    public function execute(){
+    public function execute()
+    {
+        $endpointAuth = $this->snapchat->getPicaboo()->getAuthenticatedEndpoint($this->getUsername(), $this->getAuthToken(), $this->getEndpoint());
 
-        $endpointAuth = $this->snapchat->getCasper()->getSnapchatIOSEndpointAuth($this->getUsername(), $this->getAuthToken(), $this->getEndpoint());
-
-        foreach($endpointAuth["headers"] as $key => $value){
+        foreach ($endpointAuth["headers"] as $key => $value) {
             $this->addHeader($key, $value);
         }
 
-        foreach($endpointAuth["params"] as $key => $value){
+        foreach ($endpointAuth["params"] as $key => $value) {
             $this->addParam($key, $value);
         }
 
-        $this->casperAuthCallback($endpointAuth);
+        $this->picabooAuthCallback($endpointAuth);
 
         $response = parent::execute();
         $this->response = $response;
 
-        if($this->interceptResponse($response)){
+        if ($this->interceptResponse($response)) {
             return null;
         }
 
-        if(!$response->isOK()){
+        if (!$response->isOK()) {
             throw new \Exception(sprintf("[%s] [%s] Request Failed!", $this->getEndpoint(), $response->getCode()));
         }
 
-        if($this->parseResponse()){
+        if ($this->parseResponse()) {
             return $this->mapper->map($response->getData(), $this->getResponseObject());
         }
 
         return $response->getData();
-
     }
-
 }

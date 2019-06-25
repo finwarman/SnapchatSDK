@@ -2,7 +2,7 @@
 
 namespace Snapchat\API\Request;
 
-use Snapchat\Snapchat;
+use Snapchat\SnapchatClient;
 
 class UpdateSnapsRequest extends AuthenticatedBaseRequest {
 
@@ -13,7 +13,7 @@ class UpdateSnapsRequest extends AuthenticatedBaseRequest {
     private $screenshot = false;
 
     /**
-     * @param $snapchat Snapchat
+     * @param $snapchat SnapchatClient
      * @param $snapId string Snap Id
      * @param $secondsViewedFor int Seconds the Snap was viewed for.
      */

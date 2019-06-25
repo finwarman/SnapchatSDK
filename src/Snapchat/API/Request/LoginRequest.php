@@ -2,10 +2,9 @@
 
 namespace Snapchat\API\Request;
 
-use Casper\Developer\Exception\CasperException;
 use Snapchat\API\Framework\Request;
 use Snapchat\API\Response\LoginResponse;
-use Snapchat\Snapchat;
+use Snapchat\SnapchatClient;
 
 class LoginRequest extends Request {
 
@@ -18,7 +17,7 @@ class LoginRequest extends Request {
 
     /**
      * Snapchat Instance to Use
-     * @var Snapchat
+     * @var SnapchatClient
      */
     private $snapchat;
 

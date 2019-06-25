@@ -4,12 +4,12 @@ namespace Snapchat\API\Request;
 
 use Snapchat\API\Constants;
 use Snapchat\API\Response\StoriesResponse;
-use Snapchat\Snapchat;
+use Snapchat\SnapchatClient;
 
 class StoriesRequest extends AuthenticatedBaseRequest {
 
     /**
-     * @param $snapchat Snapchat
+     * @param $snapchat SnapchatClient
      */
     public function __construct($snapchat){
 
