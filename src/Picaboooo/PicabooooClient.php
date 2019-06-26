@@ -9,7 +9,7 @@ use Snapchat\SnapchatClient;
 
 class PicabooooClient
 {
-    const BASE_URL = 'http://127.0.0.1:8080/v1/';
+    const BASE_URL = 'https://picaboooo.com/v1/';
     const API_KEY = 'dac6d9c3-0628-455b-abb9-94cc2055f751';
 
     private $ts;
