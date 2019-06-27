@@ -1,46 +1,42 @@
 <?php
 
 use Snapchat\API\Response\Model\Friend;
+use Snapchat\SnapchatClient;
 
-require("../src/autoload.php");
+require_once __DIR__ . '/../vendor/autoload.php';
 
-$casper = new \Casper\Developer\CasperDeveloperAPI("api_key", "api_secret");
-$snapchat = new \Snapchat\SnapchatClient($casper);
+$snapchat = new SnapchatClient();
 
 try {
-
-    //Login
+    // Login
     $snapchat->login("username", "password");
 
     $friendsResponse = $snapchat->getCachedFriendsResponse();
 
-    //Friends that you added
+    // Friends that you added
     $friends = $friendsResponse->getFriends();
 
-    //Friends that added you.
+    // Friends that added you.
     $friendRequests = $friendsResponse->getAddedFriends();
 
-    foreach($friends as $friend){
+    foreach ($friends as $friend) {
         echo sprintf("You added %s to your friends list!\n", $friend->getName());
     }
 
-    foreach($friendRequests as $friendRequest){
-
+    foreach ($friendRequests as $friendRequest) {
         $friendType = $friendRequest->getType();
 
-        //Your Privacy settings are Friends Only
-        if($friendType == Friend::TYPE_PENDING){
+        // Your Privacy settings are Friends Only
+        if ($friendType == Friend::TYPE_PENDING) {
             echo sprintf("%s wants to add you as a friend!\n", $friendRequest->getName());
         }
 
-        //Your Privacy settings are Everyone
-        if($friendType == Friend::TYPE_FOLLOWING){
+        // Your Privacy settings are Everyone
+        if ($friendType == Friend::TYPE_FOLLOWING) {
             echo sprintf("%s is following you, but you haven't added them back\n", $friendRequest->getName());
         }
-
     }
-
-} catch(Exception $e){
-    //Something went wrong...
+} catch (Exception $e) {
+    // Something went wrong...
     echo $e->getMessage() . "\n";
 }

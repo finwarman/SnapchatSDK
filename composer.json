@@ -23,6 +23,7 @@
     "require": {
         "ext-json": "*",
         "ext-openssl": "*",
+        "ext-zip": "*",
         "guzzlehttp/guzzle": "^6.2",
         "netresearch/jsonmapper": "v1.4.0"
     }

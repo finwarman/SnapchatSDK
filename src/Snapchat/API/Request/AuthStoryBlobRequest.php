@@ -5,8 +5,8 @@ namespace Snapchat\API\Request;
 use Snapchat\Crypto\StoryCrypto;
 use Snapchat\SnapchatClient;
 
-class AuthStoryBlobRequest extends AuthenticatedBaseRequest {
-
+class AuthStoryBlobRequest extends AuthenticatedBaseRequest
+{
     private $mediaKey;
     private $mediaIv;
 
@@ -16,7 +16,8 @@ class AuthStoryBlobRequest extends AuthenticatedBaseRequest {
      * @param $mediaKey string Story Media Key
      * @param $mediaIv string Story Media IV
      */
-    public function __construct($snapchat, $mediaId, $mediaKey, $mediaIv){
+    public function __construct($snapchat, $mediaId, $mediaKey, $mediaIv)
+    {
 
         parent::__construct($snapchat);
 
@@ -27,19 +28,23 @@ class AuthStoryBlobRequest extends AuthenticatedBaseRequest {
 
     }
 
-    public function getMethod(){
+    public function getMethod()
+    {
         return self::POST;
     }
 
-    public function getEndpoint(){
+    public function getEndpoint()
+    {
         return "/bq/auth_story_blob";
     }
 
-    public function getResponseObject(){
+    public function getResponseObject()
+    {
         return null;
     }
 
-    public function parseResponse(){
+    public function parseResponse()
+    {
         return false;
     }
 
@@ -47,8 +52,8 @@ class AuthStoryBlobRequest extends AuthenticatedBaseRequest {
      * @return object
      * @throws \Exception
      */
-    public function execute(){
+    public function execute()
+    {
         return StoryCrypto::decryptStory(parent::execute(), $this->mediaKey, $this->mediaIv);
     }
-
 }

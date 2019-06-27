@@ -8,7 +8,7 @@ $snapchat = new SnapchatClient();
 
 try {
     // Login
-    $login = $snapchat->login("username", "password");
+    $snapchat->login("username", "password");
 
     // Add Friend
     $snapchat->addFriend("username_to_add");

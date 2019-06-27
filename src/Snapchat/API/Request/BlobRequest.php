@@ -4,33 +4,35 @@ namespace Snapchat\API\Request;
 
 use Snapchat\SnapchatClient;
 
-class BlobRequest extends AuthenticatedBaseRequest {
-
+class BlobRequest extends AuthenticatedBaseRequest
+{
     /**
      * @param $snapchat SnapchatClient
      * @param $id string Snap ID to Download
      */
-    public function __construct($snapchat, $id){
-
+    public function __construct($snapchat, $id)
+    {
         parent::__construct($snapchat);
         $this->addParam("id", $id);
-
     }
 
-    public function getMethod(){
+    public function getMethod()
+    {
         return self::POST;
     }
 
-    public function getEndpoint(){
+    public function getEndpoint()
+    {
         return "/bq/blob";
     }
 
-    public function getResponseObject(){
+    public function getResponseObject()
+    {
         return null;
     }
 
-    public function parseResponse(){
+    public function parseResponse()
+    {
         return false;
     }
-
 }

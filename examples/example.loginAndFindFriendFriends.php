@@ -1,16 +1,16 @@
 <?php
 
-require("../src/autoload.php");
+use Snapchat\SnapchatClient;
 
-$casper = new \Casper\Developer\CasperDeveloperAPI("api_key", "api_secret");
-$snapchat = new \Snapchat\SnapchatClient($casper);
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$snapchat = new SnapchatClient();
 
 try {
+    // Login
+    $snapchat->login("username", "password");
 
-    //Login
-    $login = $snapchat->login("username", "password");
-
-    //Find friends by Numbers and Names
+    // Find friends by Numbers and Names
     $findFriends = $snapchat->findFriends("NZ", array(
         "0000000000" => "Friend Name",
         "1234567890" => "Second Friend",
@@ -19,11 +19,10 @@ try {
 
     $results = $findFriends->getResults();
 
-    foreach($results as $result){
+    foreach ($results as $result) {
         echo sprintf("Found Friend: Username=%s Display=%s", $result->getName(), $result->getDisplay()) . "\n";
     }
-
-} catch(Exception $e){
-    //Something went wrong...
+} catch (Exception $e) {
+    // Something went wrong...
     echo $e->getMessage() . "\n";
 }

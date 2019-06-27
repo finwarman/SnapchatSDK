@@ -1,22 +1,21 @@
 <?php
 
-require("../src/autoload.php");
+use Snapchat\SnapchatClient;
 
-$casper = new \Casper\Developer\CasperDeveloperAPI("api_key", "api_secret");
-$snapchat = new \Snapchat\SnapchatClient($casper);
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$snapchat = new SnapchatClient();
 
 try {
+    // Login
+    $snapchat->login("username", "password");
 
-    //Login
-    $login = $snapchat->login("username", "password");
-
-    //Download My SnapTag
+    // Download My SnapTag
     $snapchat->downloadMySnapTag(sprintf("download/snaptag/%s.png", $snapchat->getUsername()));
 
-    //Download someone else's SnapTag
+    // Download someone else's SnapTag
     $snapchat->downloadSnapTagByUsername("teamsnapchat", "download/snaptag/teamsnapchat.png");
-
-} catch(Exception $e){
-    //Something went wrong...
+} catch (Exception $e) {
+    // Something went wrong...
     echo $e->getMessage() . "\n";
 }

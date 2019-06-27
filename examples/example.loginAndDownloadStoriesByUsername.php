@@ -1,41 +1,41 @@
 <?php
 
-require("../src/autoload.php");
+use Snapchat\SnapchatClient;
 
-$casper = new \Casper\Developer\CasperDeveloperAPI("api_key", "api_secret");
-$snapchat = new \Snapchat\SnapchatClient($casper);
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$snapchat = new SnapchatClient();
 
 try {
+    // Login
+    $snapchat->login("username", "password");
 
-    //Login
-    $login = $snapchat->login("username", "password");
+    // Get Stories from Login Response
+    $storiesResponse = $snapchat->getCachedStoriesResponse();
 
-    //Get Stories from Login Response
-    $storiesResponse = $login->getStoriesResponse();
+    // Iterate Friend Stories
+    foreach ($storiesResponse->getFriendStories() as $friendStories) {
 
-    //Iterate Friend Stories
-    foreach($storiesResponse->getFriendStories() as $friendStories){
-
-        //We only want Stories for this Username
-        if($friendStories->getUsername() == "username_you_want_snaps_for"){
+        // We only want Stories for this Username
+        if ($friendStories->getUsername() == "username_you_want_stories_from") {
 
             $storiesContainer = $friendStories->getStories();
-            foreach($storiesContainer as $storyContainer){
+            foreach ($storiesContainer as $storyContainer) {
 
                 $story = $storyContainer->getStory();
 
                 echo "Downloading Story: " . $story->getId() . "\n";
 
-                //Where to Save the Files
-                $filename = sprintf("download/stories/%s", $story->getId());
+                // Where to Save the Files
+                $filename = sprintf("download/stories/%s.%s", $story->getId(), $story->getFileExtension());
                 $filename_overlay = sprintf("download/stories/%s_overlay", $story->getId());
 
-                //Download the Story
+                // Download the Story
                 $mediapath = $snapchat->downloadStory($story, $filename, $filename_overlay);
 
-                echo "Story saved to: " . $mediapath->getBlobPath(). "\n";
-                if($mediapath->overlayExists()){
-                    echo "Story Overlay saved to: " . $mediapath->getOverlayPath(). "\n";
+                echo "Story saved to: " . $mediapath->getBlobPath() . "\n";
+                if ($mediapath->overlayExists()) {
+                    echo "Story Overlay saved to: " . $mediapath->getOverlayPath() . "\n";
                 }
 
             }
@@ -45,8 +45,7 @@ try {
         }
 
     }
-
-} catch(Exception $e){
-    //Something went wrong...
+} catch (Exception $e) {
+    // Something went wrong...
     echo $e->getMessage() . "\n";
 }

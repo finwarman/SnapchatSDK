@@ -2,8 +2,8 @@
 
 namespace Snapchat\API\Response\Model;
 
-class Snap {
-
+class Snap
+{
     const TYPE_IMAGE = 0;
     const TYPE_VIDEO = 1;
     const TYPE_VIDEO_NOAUDIO = 2;
@@ -358,18 +358,16 @@ class Snap {
      *
      * @return string
      */
-    public function getFileExtension(){
-
-        if($this->isPhoto()){
+    public function getFileExtension()
+    {
+        if ($this->isPhoto()) {
             return "jpg";
         }
 
-        if($this->isVideo()){
+        if ($this->isVideo()) {
             return "mp4";
         }
 
         return "bin";
-
     }
-
 }

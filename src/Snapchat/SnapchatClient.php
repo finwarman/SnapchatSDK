@@ -473,21 +473,19 @@ class SnapchatClient {
     }
 
     /**
-     *
      * Get cached Conversations.
      * If Conversations is not Cached, the API will be queried.
      *
      * @return Conversation[]
-     * @throws \Exception
+     * @throws Exception
      */
-    public function getCachedConversations(){
-
-        if($this->cached_conversations == null){
+    public function getCachedConversations()
+    {
+        if ($this->cached_conversations == null) {
             $this->getConversations();
         }
 
         return $this->cached_conversations;
-
     }
 
     /**
@@ -733,31 +731,30 @@ class SnapchatClient {
      * @return MediaPath
      * @throws \Exception
      */
-    public function downloadSnapById($snapId, $file, $file_overlay = null, $zipped = null){
-
-        if(!$this->isLoggedIn()){
-            throw new \Exception("You must be logged in to call downloadSnapById().");
+    public function downloadSnapById($snapId, $file, $file_overlay = null, $zipped = null)
+    {
+        if (!$this->isLoggedIn()) {
+            throw new SnapchatException("You must be logged in to call downloadSnapById().");
         }
 
         $request = new BlobRequest($this, $snapId);
         $response = $request->execute();
 
-        if($file_overlay == null){
+        if ($file_overlay == null) {
             $file_overlay = sprintf("%s_overlay.png", $file);
         }
 
-        if($zipped == null){
+        if ($zipped == null) {
             $zipped = $this->isDataZipped($response);
         }
 
-        if($zipped){
+        if ($zipped) {
             $this->unzipBlob($response, $file, $file_overlay);
         } else {
             file_put_contents($file, $response);
         }
 
         return new MediaPath($file, $file_overlay);
-
     }
 
     /**
@@ -770,14 +767,13 @@ class SnapchatClient {
      * @return MediaPath
      * @throws \Exception
      */
-    public function downloadSnap($snap, $file, $file_overlay = null){
-
-        if(!$this->isLoggedIn()){
-            throw new \Exception("You must be logged in to call downloadSnap().");
+    public function downloadSnap($snap, $file, $file_overlay = null)
+    {
+        if (!$this->isLoggedIn()) {
+            throw new SnapchatException("You must be logged in to call downloadSnap().");
         }
 
         return $this->downloadSnapById($snap->getId(), $file, $file_overlay, $snap->isZipped());
-
     }
 
     /**
@@ -904,40 +900,32 @@ class SnapchatClient {
         return StringUtil::startsWith($data, "\x50\x4b\x03\x04");
     }
 
-    private function unzipBlob($data, $file_blob, $file_overlay){
-
+    private function unzipBlob($data, $file_blob, $file_overlay)
+    {
         $file_temp = tempnam(sys_get_temp_dir(), "zip");
         file_put_contents($file_temp, $data);
 
         $zip = zip_open($file_temp);
-        if(is_resource($zip)){
-
-            while($zip_entry = zip_read($zip)){
-
+        if (is_resource($zip)) {
+            while ($zip_entry = zip_read($zip)) {
                 $filename = zip_entry_name($zip_entry);
-
-                if(zip_entry_open($zip, $zip_entry, "r")){
-
-                    if(StringUtil::startsWith($filename, "media")){
+                if (zip_entry_open($zip, $zip_entry, "r")) {
+                    if (StringUtil::startsWith($filename, "media")) {
                         file_put_contents($file_blob, zip_entry_read($zip_entry, zip_entry_filesize($zip_entry)));
                     }
 
-                    if(StringUtil::startsWith($filename, "overlay")){
+                    if (StringUtil::startsWith($filename, "overlay")) {
                         file_put_contents($file_overlay, zip_entry_read($zip_entry, zip_entry_filesize($zip_entry)));
                     }
 
                     zip_entry_close($zip_entry);
-
                 }
-
             }
 
             zip_close($zip);
-
         }
 
         unlink($file_temp);
-
     }
 
     /**
@@ -1130,25 +1118,25 @@ class SnapchatClient {
      * @param $country string Country Code. US, NZ, AU etc...
      * @param $query array Array of Names and Numbers to lookup. Format: array("number" => "name"); Maximum of 30 per Request.
      * @return API\Response\FindFriendsResponse
-     * @throws \Exception
+     * @throws Exception
      */
-    public function findFriends($country, $query){
-
-        if(!$this->isLoggedIn()){
-            throw new \Exception("You must be logged in to call findFriends().");
+    public function findFriends($country, $query)
+    {
+        if (!$this->isLoggedIn()) {
+            throw new SnapchatException("You must be logged in to call findFriends().");
         }
 
         $updatesResponse = $this->getCachedUpdatesResponse();
         $mobile = $updatesResponse->getMobile();
-        if(empty($mobile)){
-            throw new \Exception("You must Verify your Phone Number to use Find Friends.");
+
+        if (empty($mobile)) {
+            throw new SnapchatException("You must verify your phone number to use find friends.");
         }
 
         $request = new FindFriendsRequest($this, $country, $query);
         $response = $request->execute();
 
         return $response;
-
     }
 
     /**
