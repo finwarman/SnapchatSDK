@@ -23,7 +23,7 @@ class FriendsResponse extends BaseResponse {
     private $added_friends;
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getBests()
     {
@@ -31,7 +31,7 @@ class FriendsResponse extends BaseResponse {
     }
 
     /**
-     * @param \string[] $bests
+     * @param string[] $bests
      */
     public function setBests($bests)
     {

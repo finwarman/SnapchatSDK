@@ -6,8 +6,8 @@ use Snapchat\API\Framework\RequestFile;
 use Snapchat\API\Request\Model\UploadMediaPayload;
 use Snapchat\SnapchatClient;
 
-class UploadMediaRequest extends AuthenticatedBaseRequest {
-
+class UploadMediaRequest extends AuthenticatedBaseRequest
+{
     const TYPE_IMAGE = 0;
     const TYPE_VIDEO = 1;
 
@@ -17,8 +17,8 @@ class UploadMediaRequest extends AuthenticatedBaseRequest {
      * @param $snapchat SnapchatClient
      * @param $payload UploadMediaPayload
      */
-    public function __construct($snapchat, $payload){
-
+    public function __construct($snapchat, $payload)
+    {
         parent::__construct($snapchat);
 
         $this->payload = $payload;
@@ -28,22 +28,25 @@ class UploadMediaRequest extends AuthenticatedBaseRequest {
         $this->addParam("media_id", $this->payload->media_id);
 
         $this->addFile("data", new RequestFile($this->payload->file, "application/octet-stream", "data"));
-
     }
 
-    public function getMethod(){
+    public function getMethod()
+    {
         return self::POST;
     }
 
-    public function getEndpoint(){
+    public function getEndpoint()
+    {
         return "/bq/upload";
     }
 
-    public function getResponseObject(){
+    public function getResponseObject()
+    {
         return null;
     }
 
-    public function parseResponse(){
+    public function parseResponse()
+    {
         return false;
     }
 
@@ -51,11 +54,9 @@ class UploadMediaRequest extends AuthenticatedBaseRequest {
      * @return UploadMediaPayload
      * @throws \Exception
      */
-    public function execute(){
-
+    public function execute()
+    {
         parent::execute();
         return $this->payload;
-
     }
-
 }

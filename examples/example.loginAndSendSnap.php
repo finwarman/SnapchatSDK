@@ -1,28 +1,27 @@
 <?php
 
-require("../src/autoload.php");
+use Snapchat\SnapchatClient;
 
-$casper = new \Casper\Developer\CasperDeveloperAPI("api_key", "api_secret");
-$snapchat = new \Snapchat\SnapchatClient($casper);
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$snapchat = new SnapchatClient();
 
 try {
-
-    //Login
+    // Login
     $login = $snapchat->login("username", "password");
 
-    //Upload Photo to Snapchat
+    // Upload Photo to Snapchat
     $uploadPayload = $snapchat->uploadPhoto("photo.jpg");
 
-    //Send Snap
-    $snapchat->sendMedia($uploadPayload, 10, array("recipient"));
+    // Send Snap
+    $snapchat->sendMedia($uploadPayload, 10, ["recipient"]);
 
-    //Send Snap (and set as Story)
-    //$snapchat->sendMedia($uploadPayload, 10, array("recipient"), true);
+    // Send Snap (and set as Story)
+    //$snapchat->sendMedia($uploadPayload, 10, ["recipient"], true);
 
-    //Set Story only
-    //$snapchat->sendMedia($uploadPayload, 10, array(), true);
-
-} catch(Exception $e){
-    //Something went wrong...
+    // Set Story only
+    //$snapchat->sendMedia($uploadPayload, 10, [], true);
+} catch (Exception $e) {
+    // Something went wrong...
     echo $e->getMessage() . "\n";
 }

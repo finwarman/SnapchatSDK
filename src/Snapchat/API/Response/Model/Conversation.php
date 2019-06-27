@@ -69,7 +69,7 @@ class Conversation {
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getParticipants()
     {
@@ -77,7 +77,7 @@ class Conversation {
     }
 
     /**
-     * @param \string[] $participants
+     * @param string[] $participants
      */
     public function setParticipants($participants)
     {
@@ -101,7 +101,7 @@ class Conversation {
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getPendingChatsFor()
     {
@@ -109,7 +109,7 @@ class Conversation {
     }
 
     /**
-     * @param \string[] $pending_chats_for
+     * @param string[] $pending_chats_for
      */
     public function setPendingChatsFor($pending_chats_for)
     {

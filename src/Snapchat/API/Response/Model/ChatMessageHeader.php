@@ -39,7 +39,7 @@ class ChatMessageHeader {
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getTo()
     {
@@ -47,7 +47,7 @@ class ChatMessageHeader {
     }
 
     /**
-     * @param \string[] $to
+     * @param string[] $to
      */
     public function setTo($to)
     {

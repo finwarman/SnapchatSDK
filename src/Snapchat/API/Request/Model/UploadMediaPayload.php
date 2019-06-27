@@ -2,10 +2,9 @@
 
 namespace Snapchat\API\Request\Model;
 
-class UploadMediaPayload {
-
+class UploadMediaPayload
+{
     public $file;
     public $type;
     public $media_id;
-
 }

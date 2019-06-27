@@ -399,16 +399,15 @@ class SnapchatClient {
     }
 
     /**
-     *
      * Fetch All Updates.
      *
      * @return API\Response\AllUpdatesResponse
-     * @throws \Exception
+     * @throws Exception
      */
-    public function getAllUpdates(){
-
-        if(!$this->isLoggedIn()){
-            throw new \Exception("You must be logged in to call getAllUpdates().");
+    public function getAllUpdates()
+    {
+        if (!$this->isLoggedIn()) {
+            throw new SnapchatException("You must be logged in to call getAllUpdates().");
         }
 
         $request = new AllUpdatesRequest($this);
@@ -423,7 +422,6 @@ class SnapchatClient {
         $this->auth_token = $this->cached_updates_response->getAuthToken();
 
         return $response;
-
     }
 
     /**
@@ -945,9 +943,10 @@ class SnapchatClient {
     /**
      * @param $file string File to Upload
      * @return UploadMediaPayload
-     * @throws \Exception
+     * @throws Exception
      */
-    public function uploadPhoto($file){
+    public function uploadPhoto($file)
+    {
         return $this->uploadMedia($file, UploadMediaRequest::TYPE_IMAGE);
     }
 
@@ -966,10 +965,10 @@ class SnapchatClient {
      * @return UploadMediaPayload
      * @throws \Exception
      */
-    private function uploadMedia($file, $type){
-
-        if(!$this->isLoggedIn()){
-            throw new \Exception("You must be logged in to call uploadMedia().");
+    private function uploadMedia($file, $type)
+    {
+        if (!$this->isLoggedIn()) {
+            throw new SnapchatException("You must be logged in to call uploadMedia().");
         }
 
         $payload = new UploadMediaPayload();
@@ -979,7 +978,6 @@ class SnapchatClient {
 
         $request = new UploadMediaRequest($this, $payload);
         return $request->execute();
-
     }
 
     /**
@@ -1184,22 +1182,22 @@ class SnapchatClient {
      * @param $usernames array Usernames to get IDs for
      * @return array Array of User IDs in same order as input array
      */
-    public function getUserIDs($usernames){
-
+    public function getUserIDs($usernames)
+    {
         $map = array();
 
-        if($this->cached_friends_response != null){
+        if ($this->cached_friends_response != null) {
 
-            foreach($this->cached_friends_response->getFriends() as $friend){
+            foreach ($this->cached_friends_response->getFriends() as $friend) {
                 $friend_user_id = $friend->getUserId();
-                if(in_array($friend->getName(), $usernames) && !empty($friend_user_id)){
+                if (in_array($friend->getName(), $usernames) && !empty($friend_user_id)) {
                     $map[$friend->getName()] = $friend_user_id;
                 }
             }
 
-            foreach($this->cached_friends_response->getAddedFriends() as $friend){
+            foreach ($this->cached_friends_response->getAddedFriends() as $friend) {
                 $friend_user_id = $friend->getUserId();
-                if(in_array($friend->getName(), $usernames) && !empty($friend_user_id)){
+                if (in_array($friend->getName(), $usernames) && !empty($friend_user_id)) {
                     $map[$friend->getName()] = $friend_user_id;
                 }
             }
@@ -1208,12 +1206,11 @@ class SnapchatClient {
 
         $ids = array();
 
-        foreach($usernames as $username){
+        foreach ($usernames as $username) {
             $ids[] = isset($map[$username]) ? $map[$username] : "";
         }
 
         return $ids;
-
     }
 
     /**

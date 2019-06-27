@@ -46,7 +46,7 @@ class RegisterResponse extends BaseResponse {
     private $default_username_status;
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getUsernameSuggestions()
     {
@@ -54,7 +54,7 @@ class RegisterResponse extends BaseResponse {
     }
 
     /**
-     * @param \string[] $username_suggestions
+     * @param string[] $username_suggestions
      */
     public function setUsernameSuggestions($username_suggestions)
     {

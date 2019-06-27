@@ -100,6 +100,6 @@ class LoginRequest extends Request
             throw new SnapchatException(sprintf("[%s] Login Failed!", $response->getCode()));
         }
 
-        return $this->mapper->map($response->getData(), new LoginResponse());
+        return $this->mapper->map(\GuzzleHttp\json_decode($response->getData()), new LoginResponse());
     }
 }

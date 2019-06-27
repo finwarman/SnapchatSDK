@@ -267,7 +267,7 @@ class UpdatesResponse extends BaseResponse {
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getRecents()
     {
@@ -275,7 +275,7 @@ class UpdatesResponse extends BaseResponse {
     }
 
     /**
-     * @param \string[] $recents
+     * @param string[] $recents
      */
     public function setRecents($recents)
     {

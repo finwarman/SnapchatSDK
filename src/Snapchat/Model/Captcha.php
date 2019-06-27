@@ -46,7 +46,7 @@ class Captcha {
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getFiles()
     {

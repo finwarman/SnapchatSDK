@@ -49,6 +49,7 @@ class PhoneVerifyRequest extends AuthenticatedBaseRequest {
     }
 
     public function picabooAuthCallback($endpointAuth){
+        parent::picabooAuthCallback($endpointAuth);
 
         $params = $endpointAuth["params"];
 
@@ -57,7 +58,6 @@ class PhoneVerifyRequest extends AuthenticatedBaseRequest {
 
         $this->addParam("dsig", $deviceToken->getDeviceSignature());
         $this->addParam("dtoken1i", $deviceToken->getDeviceTokenIdentifier());
-
     }
 
     /**

@@ -136,7 +136,7 @@ abstract class BaseRequest extends Request
         }
 
         if ($this->parseResponse()) {
-            return $this->mapper->map($response->getData(), $this->getResponseObject());
+            return $this->mapper->map(\GuzzleHttp\json_decode($response->getData()), $this->getResponseObject());
         }
 
         return $response->getData();

@@ -5,6 +5,7 @@ namespace Snapchat\API\Framework;
 
 use GuzzleHttp\Client;
 use JsonMapper;
+use Snapchat\Exceptions\SnapchatException;
 
 abstract class Request
 {
@@ -200,10 +201,10 @@ abstract class Request
 
             default:
             {
-                throw new \Exception("Unsupported Request Method");
+                throw new SnapchatException("Unsupported Request Method");
             }
         }
 
-        return new Response($response, \GuzzleHttp\json_decode($response->getBody()->getContents()));
+        return new Response($response, $response->getBody()->getContents());
     }
 }

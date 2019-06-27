@@ -39,11 +39,6 @@ class FriendRequest extends AuthenticatedBaseRequest
         }
     }
 
-    public function picabooAuthCallback($endpointEndpointAuth)
-    {
-        $this->addParam("username", $this->snapchat->getUsername());
-    }
-
     public function updateDisplayName($display)
     {
         $this->addParam(self::KEY_ACTION, "display");
