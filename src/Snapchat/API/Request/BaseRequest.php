@@ -28,9 +28,6 @@ abstract class BaseRequest extends Request
     {
         parent::__construct($snapchat->getClient());
 
-        $this->addHeader("Accept-Language", "en");
-        $this->addHeader("Accept-Locale", "en_US");
-
         $this->setSnapchat($snapchat);
         $this->setProxy($snapchat->getProxy());
         $this->setVerifyPeer($snapchat->shouldVerifyPeer());

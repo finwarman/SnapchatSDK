@@ -2,18 +2,25 @@
 
 namespace Snapchat\API\Request;
 
+use Exception;
+use JsonMapper_Exception;
+use Picaboooo\PicabooooException;
 use Snapchat\API\Framework\Request;
 use Snapchat\API\Response\LoginResponse;
+use Snapchat\Exceptions\SnapchatException;
 use Snapchat\SnapchatClient;
 
-class LoginRequest extends Request {
+class LoginRequest extends Request
+{
 
     private $url;
 
     private $username;
     private $password;
 
-    private $pre_auth_token;
+    private $preAuthToken;
+    private $odlvPreAuthToken;
+    private $otpType;
 
     /**
      * Snapchat Instance to Use
@@ -21,9 +28,16 @@ class LoginRequest extends Request {
      */
     private $snapchat;
 
-    public function __construct($snapchat, $username, $password, $pre_auth_token = null){
-
-        parent::__construct();
+    /**
+     * LoginRequest constructor.
+     * @param $snapchat SnapchatClient
+     * @param $username
+     * @param $password
+     * @param null $preAuthToken
+     */
+    public function __construct($snapchat, $username, $password, $preAuthToken = null)
+    {
+        parent::__construct($snapchat->getClient());
 
         $this->snapchat = $snapchat;
 
@@ -33,15 +47,16 @@ class LoginRequest extends Request {
         $this->username = $username;
         $this->password = $password;
 
-        $this->pre_auth_token = $pre_auth_token;
-
+        $this->preAuthToken = $preAuthToken;
     }
 
-    public function getMethod(){
+    public function getMethod()
+    {
         return self::POST;
     }
 
-    public function getUrl(){
+    public function getUrl()
+    {
         return $this->url;
     }
 
@@ -49,35 +64,42 @@ class LoginRequest extends Request {
      *
      * Execute the Request
      *
-     * @return LoginResponse the Login Response
-     * @throws CasperException
-     * @throws \Exception
+     * @throws PicabooooException
+     * @throws JsonMapper_Exception
+     * @throws SnapchatException
+     * @return LoginResponse
      */
-    public function execute(){
-
+    public function execute()
+    {
         $this->clearHeaders();
         $this->clearParams();
 
-        $login = $this->snapchat->getCasper()->getSnapchatIOSLogin($this->username, $this->password, $this->snapchat->getDeviceTokenIdentifier(), $this->snapchat->getDeviceTokenVerifier(), $this->pre_auth_token);
+        $deviceToken = $this->snapchat->getCachedDeviceToken();
+        $requestData = $this->snapchat->getPicaboo()->getAuthenticatedLogin(
+            $this->username,
+            $this->password,
+            $deviceToken->getDeviceTokenIdentifier(),
+            $deviceToken->getDeviceTokenVerifier(),
+            $this->preAuthToken,
+            $this->odlvPreAuthToken,
+            $this->otpType);
 
-        $this->url = $login["url"];
+        $this->url = $requestData["url"];
 
-        foreach($login["headers"] as $key => $value){
+        foreach ($requestData["headers"] as $key => $value) {
             $this->addHeader($key, $value);
         }
 
-        foreach($login["params"] as $key => $value){
+        foreach ($requestData["params"] as $key => $value) {
             $this->addParam($key, $value);
         }
 
         $response = parent::execute();
 
-        if(!$response->isOK()){
-            throw new \Exception(sprintf("[%s] Login Failed!", $response->getCode()));
+        if (!$response->isOK()) {
+            throw new SnapchatException(sprintf("[%s] Login Failed!", $response->getCode()));
         }
 
         return $this->mapper->map($response->getData(), new LoginResponse());
-
     }
-
 }

@@ -2,8 +2,8 @@
 
 namespace Snapchat\API\Response;
 
-class ConversationResponse extends BaseResponse {
-
+class ConversationResponse
+{
     /**
      * Conversation
      * @var Model\Conversation
@@ -25,5 +25,4 @@ class ConversationResponse extends BaseResponse {
     {
         $this->conversation = $conversation;
     }
-
 }

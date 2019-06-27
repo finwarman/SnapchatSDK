@@ -2,6 +2,7 @@
 
 namespace Snapchat;
 
+use Exception;
 use GuzzleHttp\Client;
 use Picaboooo\PicabooooClient;
 use Snapchat\API\Request\AllUpdatesRequest;
@@ -37,6 +38,7 @@ use Snapchat\API\Response\Model\Story;
 use Snapchat\API\Response\StoriesResponse;
 use Snapchat\API\Response\UpdatesResponse;
 use Snapchat\Crypto\DeviceToken;
+use Snapchat\Exceptions\SnapchatException;
 use Snapchat\Model\Captcha;
 use Snapchat\Model\MediaPath;
 use Snapchat\Util\RequestUtil;
@@ -119,7 +121,12 @@ class SnapchatClient {
     public function __construct()
     {
         $this->picaboo = new PicabooooClient($this);
-        $this->client = new Client();
+        $this->client = new Client([
+            'headers' => [
+                'Accept-Language' => 'en-US; q=1.0, en; q=0.9',
+                'Accept-Locale' => 'en_US'
+            ]
+        ]);
     }
 
     public function initWithAuthToken($username, $auth_token)
@@ -213,22 +220,24 @@ class SnapchatClient {
      * @param $username string Snapchat Username
      * @param $password string Snapchat Password
      * @return API\Response\LoginResponse
-     * @throws \Exception
+     * @throws Exception
      */
-    public function login($username, $password){
-
+    public function login($username, $password)
+    {
         $request = new LoginRequest($this, $username, $password);
         $response = $request->execute();
 
-        if($response->getStatus() != 0){
-
-            //todo: Support 2Factor Logins.
-            if($response->isTwoFaNeeded()){
-                throw new \Exception("Snapchat account requires 2Factor Authentication.");
+        if ($response->getStatus() != 0) {
+            // TODO: Support 2FA.
+            if ($response->isTwoFaNeeded()) {
+                throw new SnapchatException("Snapchat account requires 2FA (Token).");
             }
 
-            throw new \Exception(sprintf("[%s] Login Failed: %s", $response->getStatus(), $response->getMessage()));
+            if ($response->isOdlvRequired()) {
+                throw new SnapchatException("Snapchat account requires 2FA (Email / Phone).");
+            }
 
+            throw new SnapchatException(sprintf("[%s] Login Failed: %s", $response->getStatus(), $response->getMessage()));
         }
 
         $this->cached_updates_response = $response->getUpdatesResponse();
@@ -242,12 +251,11 @@ class SnapchatClient {
         $dtoken1i = $response->getDtoken1i();
         $dtoken1v = $response->getDtoken1v();
 
-        if(!empty($dtoken1i) && !empty($dtoken1v)){
+        if (!empty($dtoken1i) && !empty($dtoken1v)) {
             $this->initDeviceToken($dtoken1i, $dtoken1v);
         }
 
         return $response;
-
     }
 
     /**
@@ -1298,14 +1306,13 @@ class SnapchatClient {
      * @return DeviceToken
      * @throws \Exception
      */
-    public function getCachedDeviceToken(){
-
-        if($this->hasDeviceToken()){
+    public function getCachedDeviceToken()
+    {
+        if ($this->hasDeviceToken()) {
             return new DeviceToken($this->getDeviceTokenIdentifier(), $this->getDeviceTokenVerifier());
         }
 
         return $this->getDeviceToken();
-
     }
 
     /**

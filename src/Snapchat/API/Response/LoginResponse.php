@@ -2,8 +2,8 @@
 
 namespace Snapchat\API\Response;
 
-class LoginResponse extends BaseResponse {
-
+class LoginResponse
+{
     /**
      * Updates Response
      * @var UpdatesResponse
@@ -47,18 +47,6 @@ class LoginResponse extends BaseResponse {
     private $dtoken1v;
 
     /**
-     * Two Factor Auth Needed
-     * @var boolean
-     */
-    private $two_fa_needed;
-
-    /**
-     * Pre AuthToken
-     * @var string
-     */
-    private $pre_auth_token;
-
-    /**
      * Phone Number
      * @var string
      */
@@ -75,6 +63,45 @@ class LoginResponse extends BaseResponse {
      * @var string
      */
     private $story_privacy;
+
+    /** @var bool */
+    private $logged;
+
+    /** @var string */
+    private $message;
+
+    /** @var int */
+    private $status;
+
+    /** @var string */
+    private $username;
+
+    /** @var bool */
+    private $odlv_required;
+
+    /** @var string */
+    private $odlv_pre_auth_token;
+
+    /** @var string */
+    private $obfuscated_phone;
+
+    /** @var string */
+    private $obfuscated_email;
+
+    /** @var bool */
+    private $two_fa_needed;
+
+    /** @var string */
+    private $pre_auth_token;
+
+    /** @var bool */
+    private $is_otp_two_fa_enabled;
+
+    /** @var bool */
+    private $is_sms_two_fa_enabled;
+
+    /** @var string */
+    private $message_format;
 
     /**
      * @return UpdatesResponse
@@ -189,38 +216,6 @@ class LoginResponse extends BaseResponse {
     }
 
     /**
-     * @return boolean
-     */
-    public function isTwoFaNeeded()
-    {
-        return $this->two_fa_needed;
-    }
-
-    /**
-     * @param boolean $two_fa_needed
-     */
-    public function setTwoFaNeeded($two_fa_needed)
-    {
-        $this->two_fa_needed = $two_fa_needed;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPreAuthToken()
-    {
-        return $this->pre_auth_token;
-    }
-
-    /**
-     * @param string $pre_auth_token
-     */
-    public function setPreAuthToken($pre_auth_token)
-    {
-        $this->pre_auth_token = $pre_auth_token;
-    }
-
-    /**
      * @return string
      */
     public function getPhoneNumber()
@@ -268,4 +263,211 @@ class LoginResponse extends BaseResponse {
         $this->story_privacy = $story_privacy;
     }
 
+    /**
+     * @return bool
+     */
+    public function isLogged()
+    {
+        return $this->logged;
+    }
+
+    /**
+     * @param bool $logged
+     */
+    public function setLogged($logged)
+    {
+        $this->logged = $logged;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * @param string $message
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param int $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * @param string $username
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOdlvRequired()
+    {
+        return $this->odlv_required;
+    }
+
+    /**
+     * @param bool $odlv_required
+     */
+    public function setOdlvRequired($odlv_required)
+    {
+        $this->odlv_required = $odlv_required;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOdlvPreAuthToken()
+    {
+        return $this->odlv_pre_auth_token;
+    }
+
+    /**
+     * @param string $odlv_pre_auth_token
+     */
+    public function setOdlvPreAuthToken($odlv_pre_auth_token)
+    {
+        $this->odlv_pre_auth_token = $odlv_pre_auth_token;
+    }
+
+    /**
+     * @return string
+     */
+    public function getObfuscatedPhone()
+    {
+        return $this->obfuscated_phone;
+    }
+
+    /**
+     * @param string $obfuscated_phone
+     */
+    public function setObfuscatedPhone($obfuscated_phone)
+    {
+        $this->obfuscated_phone = $obfuscated_phone;
+    }
+
+    /**
+     * @return string
+     */
+    public function getObfuscatedEmail()
+    {
+        return $this->obfuscated_email;
+    }
+
+    /**
+     * @param string $obfuscated_email
+     */
+    public function setObfuscatedEmail($obfuscated_email)
+    {
+        $this->obfuscated_email = $obfuscated_email;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTwoFaNeeded()
+    {
+        return $this->two_fa_needed;
+    }
+
+    /**
+     * @param bool $two_fa_needed
+     */
+    public function setTwoFaNeeded($two_fa_needed)
+    {
+        $this->two_fa_needed = $two_fa_needed;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPreAuthToken()
+    {
+        return $this->pre_auth_token;
+    }
+
+    /**
+     * @param string $pre_auth_token
+     */
+    public function setPreAuthToken($pre_auth_token)
+    {
+        $this->pre_auth_token = $pre_auth_token;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIsOtpTwoFaEnabled()
+    {
+        return $this->is_otp_two_fa_enabled;
+    }
+
+    /**
+     * @param bool $is_otp_two_fa_enabled
+     */
+    public function setIsOtpTwoFaEnabled($is_otp_two_fa_enabled)
+    {
+        $this->is_otp_two_fa_enabled = $is_otp_two_fa_enabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIsSmsTwoFaEnabled()
+    {
+        return $this->is_sms_two_fa_enabled;
+    }
+
+    /**
+     * @param bool $is_sms_two_fa_enabled
+     */
+    public function setIsSmsTwoFaEnabled($is_sms_two_fa_enabled)
+    {
+        $this->is_sms_two_fa_enabled = $is_sms_two_fa_enabled;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessageFormat()
+    {
+        return $this->message_format;
+    }
+
+    /**
+     * @param string $message_format
+     */
+    public function setMessageFormat($message_format)
+    {
+        $this->message_format = $message_format;
+    }
 }

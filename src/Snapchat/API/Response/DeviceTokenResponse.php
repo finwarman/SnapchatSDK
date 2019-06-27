@@ -2,8 +2,8 @@
 
 namespace Snapchat\API\Response;
 
-class DeviceTokenResponse extends BaseResponse {
-
+class DeviceTokenResponse
+{
     /**
      * Device Token Identifier
      * @var string
@@ -47,5 +47,4 @@ class DeviceTokenResponse extends BaseResponse {
     {
         $this->dtoken1v = $dtoken1v;
     }
-
 }
