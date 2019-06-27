@@ -1,19 +1,19 @@
 <?php
 
-require("../src/autoload.php");
+use Snapchat\SnapchatClient;
 
-$casper = new \Casper\Developer\CasperDeveloperAPI("api_key", "api_secret");
-$snapchat = new \Snapchat\SnapchatClient($casper);
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$snapchat = new SnapchatClient();
 
 try {
-
-    //Login
+    // Login
     $login = $snapchat->login("username", "password");
 
-    //Add Friend
+    // Add Friend
     $snapchat->addFriend("username_to_add");
 
-} catch(Exception $e){
-    //Something went wrong...
+} catch (Exception $e) {
+    // Something went wrong...
     echo $e->getMessage() . "\n";
 }

@@ -2,6 +2,7 @@
 
 namespace Snapchat\API\Request;
 
+use Exception;
 use Picaboooo\PicabooooException;
 use Snapchat\API\Constants;
 use Snapchat\API\Framework\Request;
@@ -131,7 +132,7 @@ abstract class BaseRequest extends Request
         }
 
         if (!$response->isOK()) {
-            throw new \Exception(sprintf("[%s] [%s] Request Failed!", $this->getEndpoint(), $response->getCode()));
+            throw new Exception(sprintf("[%s] [%s] Request Failed!", $this->getEndpoint(), $response->getCode()));
         }
 
         if ($this->parseResponse()) {

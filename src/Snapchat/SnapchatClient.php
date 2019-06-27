@@ -599,18 +599,17 @@ class SnapchatClient {
     /**
      * @param $username string Snapchat Username to Add as Friend
      * @return API\Response\FriendResponse
-     * @throws \Exception
+     * @throws Exception
      */
-    public function addFriend($username){
-
-        if(!$this->isLoggedIn()){
-            throw new \Exception("You must be logged in to call addFriend().");
+    public function addFriend($username)
+    {
+        if (!$this->isLoggedIn()) {
+            throw new SnapchatException("You must be logged in to call addFriend().");
         }
 
         $request = new FriendRequest($this, $username);
         $request->add();
         return $request->execute();
-
     }
 
     /**

@@ -2,8 +2,8 @@
 
 namespace Snapchat\API\Response;
 
-class FriendResponse extends BaseResponse {
-
+class FriendResponse extends BaseResponse
+{
     /**
      * Friend Object
      * @var object
@@ -13,15 +13,16 @@ class FriendResponse extends BaseResponse {
     /**
      * @return object
      */
-    public function getObject(){
+    public function getObject()
+    {
         return $this->object;
     }
 
     /**
      * @param object $object
      */
-    public function setObject($object){
+    public function setObject($object)
+    {
         $this->object = $object;
     }
-
 }

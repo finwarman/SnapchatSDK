@@ -2,7 +2,7 @@
 
 namespace Snapchat\API\Response;
 
-class LoginResponse
+class LoginResponse extends BaseResponse
 {
     /**
      * Updates Response
@@ -63,12 +63,6 @@ class LoginResponse
      * @var string
      */
     private $story_privacy;
-
-    /** @var bool */
-    private $logged;
-
-    /** @var string */
-    private $message;
 
     /** @var int */
     private $status;
@@ -261,38 +255,6 @@ class LoginResponse
     public function setStoryPrivacy($story_privacy)
     {
         $this->story_privacy = $story_privacy;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isLogged()
-    {
-        return $this->logged;
-    }
-
-    /**
-     * @param bool $logged
-     */
-    public function setLogged($logged)
-    {
-        $this->logged = $logged;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMessage()
-    {
-        return $this->message;
-    }
-
-    /**
-     * @param string $message
-     */
-    public function setMessage($message)
-    {
-        $this->message = $message;
     }
 
     /**
