@@ -263,61 +263,64 @@ class SnapchatClient {
      * Register a new Snapchat Account.
      * You will need to use the {@see registerUsername()} method to Set a Username to the Account
      *
-     * @param $email string Email Address
+     * @param $username string Username
      * @param $password string Password
+     * @param $firstName string First name
+     * @param $lastName string Last name
      * @param $birthday string Birthday (format: YYYY-MM-DD)
      * @param $timezone string TimeZone {@link http://php.net/manual/en/timezones.php}
-     * @return API\Response\RegisterResponse
-     * @throws \Exception
+     * @return API\Response\LoginResponse
+     * @throws Exception
      */
-    public function register($email, $password, $birthday, $timezone){
-
-        $request = new RegisterRequest($this, $email, $password, $birthday, $timezone);
+    public function register($username, $password, $firstName, $lastName, $birthday, $timezone)
+    {
+        $request = new RegisterRequest($this, $username, $password, $firstName, $lastName, $birthday, $timezone);
         $response = $request->execute();
 
-        if($response->getStatus() != 0){
-            throw new \Exception(sprintf("[%s] Registration Failed: %s", $response->getStatus(), $response->getMessage()));
+        if ($response->getStatus() != 0) {
+            throw new Exception(sprintf("[%s] Registration Failed: %s", $response->getStatus(), $response->getMessage()));
         }
 
-        $this->initWithAuthToken($response->getEmail(), $response->getAuthToken());
+        $this->initWithAuthToken(
+            $response->getUpdatesResponse()->getUsername(),
+            $response->getUpdatesResponse()->getAuthToken());
 
         return $response;
-
     }
 
-    /**
-     *
-     * Connect a Username to a newly Registered Account
-     * You will need to use the {@see register} method to Register a new Account first.
-     *
-     * One you have Registered your Username, you will need to either Verify your Phone Number or Complete a Captcha.
-     * If you decide to Verify your Number, use the {@see verifyPhoneNumber} method.
-     * If you decide to complate a Captcha, use the {@see getCaptcha} method.
-     *
-     * @param $username string Username chosen for this Account
-     * @return API\Response\RegisterUsernameResponse
-     * @throws \Exception
-     */
-    public function registerUsername($username){
-
-        $request = new RegisterUsernameRequest($this, $username);
-        $response = $request->execute();
-
-        if($response->getStatus() != 0){
-            throw new \Exception(sprintf("[%s] Registration Failed: %s", $response->getStatus(), $response->getMessage()));
-        }
-
-        $this->cached_updates_response = $response->getUpdatesResponse();
-        $this->cached_friends_response = $response->getFriendsResponse();
-        $this->cached_stories_response = $response->getStoriesResponse();
-        $this->cached_conversations = $response->getConversationsResponse();
-
-        $this->username = $this->cached_updates_response->getUsername();
-        $this->auth_token = $this->cached_updates_response->getAuthToken();
-
-        return $response;
-
-    }
+//    /**
+//     *
+//     * Connect a Username to a newly Registered Account
+//     * You will need to use the {@see register} method to Register a new Account first.
+//     *
+//     * One you have Registered your Username, you will need to either Verify your Phone Number or Complete a Captcha.
+//     * If you decide to Verify your Number, use the {@see verifyPhoneNumber} method.
+//     * If you decide to complate a Captcha, use the {@see getCaptcha} method.
+//     *
+//     * @param $username string Username chosen for this Account
+//     * @return API\Response\RegisterUsernameResponse
+//     * @throws \Exception
+//     */
+//    public function registerUsername($username){
+//
+//        $request = new RegisterUsernameRequest($this, $username);
+//        $response = $request->execute();
+//
+//        if($response->getStatus() != 0){
+//            throw new \Exception(sprintf("[%s] Registration Failed: %s", $response->getStatus(), $response->getMessage()));
+//        }
+//
+//        $this->cached_updates_response = $response->getUpdatesResponse();
+//        $this->cached_friends_response = $response->getFriendsResponse();
+//        $this->cached_stories_response = $response->getStoriesResponse();
+//        $this->cached_conversations = $response->getConversationsResponse();
+//
+//        $this->username = $this->cached_updates_response->getUsername();
+//        $this->auth_token = $this->cached_updates_response->getAuthToken();
+//
+//        return $response;
+//
+//    }
 
     /**
      *
@@ -327,10 +330,10 @@ class SnapchatClient {
      * @return Captcha The Captcha Info
      * @throws \Exception
      */
-    public function getCaptcha($folder){
-
-        if(!$this->isLoggedIn()){
-            throw new \Exception("You must be logged in to call getCaptcha().");
+    public function getCaptcha($folder)
+    {
+        if (!$this->isLoggedIn()) {
+            throw new SnapchatException("You must be logged in to call getCaptcha().");
         }
 
         $request = new GetCaptchaRequest($this);
@@ -348,14 +351,14 @@ class SnapchatClient {
         $captchaFiles = array();
 
         $zip = zip_open($tempZipFile);
-        if(is_resource($zip)){
+        if (is_resource($zip)) {
 
-            while($zipEntry = zip_read($zip)){
+            while ($zipEntry = zip_read($zip)) {
 
                 $name = zip_entry_name($zipEntry);
                 $filename = $folder . DIRECTORY_SEPARATOR . $name;
 
-                if(zip_entry_open($zip, $zipEntry, "r")){
+                if (zip_entry_open($zip, $zipEntry, "r")) {
 
                     file_put_contents($filename, zip_entry_read($zipEntry, zip_entry_filesize($zipEntry)));
                     zip_entry_close($zipEntry);
@@ -373,7 +376,6 @@ class SnapchatClient {
         unlink($tempZipFile);
 
         return new Captcha($captchaId, $folder, $captchaFiles);
-
     }
 
     /**
@@ -381,21 +383,20 @@ class SnapchatClient {
      * Solve a Captcha
      *
      * @param $id string Captcha Id you are Solving
-     * @param $solution string The Solution to this Captcha (format: 0=No Ghost, 1=Ghost)
+     * @param $solution string The Solution to this Captcha (format: 0 = No, 1 = Yes)
      * @return API\Response\SolveCaptchaResponse
-     * @throws \Exception
+     * @throws Exception
      */
-    public function solveCaptcha($id, $solution){
-
+    public function solveCaptcha($id, $solution)
+    {
         $request = new SolveCaptchaRequest($this, $id, $solution);
         $response = $request->execute();
 
-        if($response->getStatus() != 0){
-            throw new \Exception(sprintf("[%s] Registration Failed: %s", $response->getStatus(), $response->getMessage()));
+        if ($response->getStatus() != 0) {
+            throw new SnapchatException(sprintf("[%s] Registration Failed: %s", $response->getStatus(), $response->getMessage()));
         }
 
         return $response;
-
     }
 
     /**

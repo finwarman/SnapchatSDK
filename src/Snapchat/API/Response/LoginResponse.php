@@ -35,6 +35,12 @@ class LoginResponse extends BaseResponse
     private $messaging_gateway_info;
 
     /**
+     * Verification needed
+     * @var Model\VerificationNeeded
+     */
+    private $verification_needed;
+
+    /**
      * Device Token Identifier
      * @var string
      */
@@ -63,9 +69,6 @@ class LoginResponse extends BaseResponse
      * @var string
      */
     private $story_privacy;
-
-    /** @var int */
-    private $status;
 
     /** @var string */
     private $username;
@@ -178,6 +181,22 @@ class LoginResponse extends BaseResponse
     }
 
     /**
+     * @return Model\VerificationNeeded
+     */
+    public function getVerificationNeeded()
+    {
+        return $this->verification_needed;
+    }
+
+    /**
+     * @param Model\VerificationNeeded $verification_needed
+     */
+    public function setVerificationNeeded($verification_needed)
+    {
+        $this->verification_needed = $verification_needed;
+    }
+
+    /**
      * @return string
      */
     public function getDtoken1i()
@@ -255,22 +274,6 @@ class LoginResponse extends BaseResponse
     public function setStoryPrivacy($story_privacy)
     {
         $this->story_privacy = $story_privacy;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param int $status
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
     }
 
     /**

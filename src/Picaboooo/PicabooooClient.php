@@ -18,6 +18,9 @@ class PicabooooClient
     private $snapchat;
     private $client;
 
+    private $proxy;
+    private $verifyPeer = true;
+
     /**
      * @param $snapchat SnapchatClient
      */
@@ -34,6 +37,16 @@ class PicabooooClient
         ]);
     }
 
+    public function setProxy($proxy)
+    {
+        $this->proxy = $proxy;
+    }
+
+    public function setVerifyPeer($verifyPeer)
+    {
+        $this->verifyPeer = $verifyPeer;
+    }
+
     /**
      * @param $username
      * @param $authToken
@@ -44,6 +57,8 @@ class PicabooooClient
     public function getAuthenticatedEndpoint($username, $authToken, $endpoint)
     {
         $response = $this->client->post('authenticate', [
+            'verify' => $this->verifyPeer,
+            'proxy' => $this->proxy,
             'json' => [
                 'ts' => $this->ts,
                 'seq' => $this->seq,

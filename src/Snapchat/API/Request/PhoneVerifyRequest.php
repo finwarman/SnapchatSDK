@@ -54,7 +54,7 @@ class PhoneVerifyRequest extends AuthenticatedBaseRequest {
         $params = $endpointAuth["params"];
 
         $deviceToken = $this->snapchat->getCachedDeviceToken();
-        $deviceToken->initDeviceSignature($this->snapchat->getUsername(), $this->snapchat->getUsername(), $params["timestamp"], $params["req_token"]);
+        $deviceToken->initDeviceSignatureRegistration($this->snapchat->getUsername(), $this->snapchat->getUsername(), $params["timestamp"], $params["req_token"]);
 
         $this->addParam("dsig", $deviceToken->getDeviceSignature());
         $this->addParam("dtoken1i", $deviceToken->getDeviceTokenIdentifier());

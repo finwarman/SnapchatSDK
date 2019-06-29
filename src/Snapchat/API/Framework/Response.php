@@ -56,21 +56,10 @@ class Response
         return $this->data;
     }
 
-    /**
-     *
-     * Get Response Headers
-     *
-     * @return array Response Data
-     */
-    public function getHeaders()
-    {
-        return $this->response->getHeaders();
-    }
-
     public function getContentDispositionFilename()
     {
-        $headers = $this->getHeaders();
-        parse_str($headers["Content-Disposition"], $results);
+        $headerLine = $this->response->getHeaderLine('Content-Disposition');
+        parse_str($headerLine, $results);
         return $results["attachment;filename"];
     }
 

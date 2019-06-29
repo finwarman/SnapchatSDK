@@ -34,7 +34,7 @@ class DeviceToken
      * @param $timestamp string Login Request Timestamp
      * @param $request_token string Login Request Token
      */
-    public function initDeviceSignature($username, $password, $timestamp, $request_token)
+    public function initDeviceSignatureRegistration($username, $password, $timestamp, $request_token)
     {
         $data = sprintf("%s|%s|%s|%s", $username, $password, $timestamp, $request_token);
         $this->dsig = substr(hash_hmac("sha256", $data, $this->dtoken1v), 0, 20);

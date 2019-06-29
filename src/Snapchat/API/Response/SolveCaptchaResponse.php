@@ -2,8 +2,8 @@
 
 namespace Snapchat\API\Response;
 
-class SolveCaptchaResponse extends BaseResponse {
-
+class SolveCaptchaResponse extends BaseResponse
+{
     /**
      * @var boolean
      */
@@ -45,5 +45,4 @@ class SolveCaptchaResponse extends BaseResponse {
     {
         $this->is_reset_password = $is_reset_password;
     }
-
 }

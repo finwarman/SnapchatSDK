@@ -2,21 +2,26 @@
 
 namespace Snapchat\API\Request;
 
-class GetCaptchaRequest extends AuthenticatedBaseRequest {
+class GetCaptchaRequest extends AuthenticatedBaseRequest
+{
 
-    public function getMethod(){
+    public function getMethod()
+    {
         return self::POST;
     }
 
-    public function getEndpoint(){
+    public function getEndpoint()
+    {
         return "/bq/get_captcha";
     }
 
-    public function getResponseObject(){
+    public function getResponseObject()
+    {
         return null;
     }
 
-    public function parseResponse(){
+    public function parseResponse()
+    {
         return false;
     }
 

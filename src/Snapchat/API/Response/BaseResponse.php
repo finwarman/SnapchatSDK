@@ -12,6 +12,9 @@ class BaseResponse
     /** @var string */
     private $message;
 
+    /** @var int */
+    private $status;
+
     /**
      * @return bool
      */
@@ -42,5 +45,21 @@ class BaseResponse
     public function setMessage($message)
     {
         $this->message = $message;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param int $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
     }
 }
