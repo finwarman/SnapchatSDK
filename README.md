@@ -1,50 +1,41 @@
-#Snapchat-SDK-PHP
+# ![logo](examples/assets/snapchat.png) SnapchatSDK [![Latest Stable Version](https://poser.pugx.org/picaboooo/snapchatsdk/v/stable)](https://packagist.org/packages/picaboooo/snapchatsdk) [![Total Downloads](https://poser.pugx.org/picaboooo/snapchatsdk/downloads)](https://packagist.org/packages/picaboooo/snapchatsdk) ![compatible](https://img.shields.io/badge/PHP%207-Compatible-brightgreen.svg)
 
-This is an unofficial SDK for the Snapchat API in PHP. It has been built around the Casper Developer API.
+This is Snapchat's private API.
 
-##Before you Start
+## Installation
 
-The Casper Developer API is a paid service for fetching Authentication Parameters and Headers for Snapchat requests on demand.
+You can install the library using [composer](https://getcomposer.org/).
 
-You will need to register for access, and submit your Project for review.
-
-If you need to register, you can do so at the [Casper Developers](https://developers.casper.io) website.
-
-##Installation
-
-At this stage, the project is non-composer based...
-
-To get started using the SDK, you will need to include the AutoLoader script.
-
-Since we rely on the Casper Developer API, we need to provide an instance of `CasperDeveloperAPI` to the `Snapchat` constructor.
-
-```php
-require("./src/autoload.php");
-$casper = new \Casper\Developer\CasperDeveloperAPI("api_key", "api_secret");
-$snapchat = new \Snapchat\Snapchat($casper);
+```sh
+composer require picaboooo/snapchatsdk
 ```
 
-At the moment, the `Casper-Developer-SDK-PHP` project is embedded in the `lib` folder, and included in the `autoload.php`.
+```php
+require __DIR__ . '/../vendor/autoload.php';
 
-Once I learn to use composer, I will set it all up properly.
+$snapchat = new \Snapchat\SnapchatClient();
+```
 
-##Usage
+### I don't have Composer
 
-###Examples
+You can download it [here](https://getcomposer.org/download/).
+
+## Usage
+
+### Examples
 
 Take a look at the [Examples folder](./examples).
 
-###Login
+### Login
 
-To login, you will need to provide your Snapchat Username and Snapchat Password. If something goes wrong, an `Exception` will be thrown.
+To login, you will need to provide your Snapchat Username and Snapchat Password.  
+If something goes wrong, an `Exception` will be thrown.
 
 ```php
 try {
-
     $login = $snapchat->login("username", "password");
-    ...
-
-} catch(Exception $e){
+    // ...
+} catch(Exception $e) {
     echo $e->getMessage() . "\n";
 }
 ```
@@ -52,28 +43,28 @@ try {
 Once you have logged in, the `$login` object will provide direct access to all of the fetched data. Such as Snaps, Conversations, Stories and Friends.
 
 ```php
-$conversations = $login->getConversationsResponse(); //Snaps and Chat Messages
-$friendsResponse = $login->getFriendsResponse(); //Friends, Friend Requests
-$updatesResponse = $login->getUpdatesResponse(); //AuthToken, Score, Birthday, etc
-$storiesResponse = $login->getStoriesResponse(); //Your Stories and Friends Stories
+$conversations = $login->getConversationsResponse(); // Snaps and Chat Messages
+$friendsResponse = $login->getFriendsResponse(); // Friends, Friend Requests
+$updatesResponse = $login->getUpdatesResponse(); // AuthToken, Score, Birthday, etc
+$storiesResponse = $login->getStoriesResponse(); // Your Stories and Friends Stories
 ```
 
 Similar methods exist directly on the `$snapchat` object, which will fetch fresh data from the server.
 
-###AuthToken Login
+### AuthToken Login
 
 If you save the Username and AuthToken, you can create a new instance of the `Snapchat` class at a later time with the `initWithAuthToken` method.
 
 You can get the Username and AuthToken from a logged in `Snapchat` instance with `getUsername` and `getAuthToken`, for saving somewhere...
 
 ```php
-//Save these somewhere. Database etc.
+// Save these somewhere. Database etc.
 $username = $snapchat->getUsername();
 $authToken = $snapchat->getAuthToken();
 ```
 
 ```php
-//New Instance somewhere else. example, another PHP file.
+// New Instance somewhere else. example, another PHP file.
 $snapchat->initWithAuthToken("username", "auth_token");
 ```
 
@@ -82,13 +73,13 @@ When using the AuthToken method, you don't have access to the `$login` object.
 You will need to use the methods with similar names on the `$snapchat` object instead.
 
 ```php
-$conversations = $snapchat->getConversations(); //Snaps and Chat Messages
-$friendsResponse = $snapchat->getCachedFriendsResponse(); //Friends, Friend Requests
-$updatesResponse = $snapchat->getAllUpdates(); //AuthToken, Score, Birthday, etc
-$storiesResponse = $snapchat->getStories(); //Your Stories and Friends Stories
+$conversations = $snapchat->getConversations(); // Snaps and Chat Messages
+$friendsResponse = $snapchat->getCachedFriendsResponse(); // Friends, Friend Requests
+$updatesResponse = $snapchat->getAllUpdates(); // AuthToken, Score, Birthday, etc
+$storiesResponse = $snapchat->getStories(); // Your Stories and Friends Stories
 ```
 
-###Friends
+### Friends
 
 Friend data is provided in the response of multiple API calls, but not it's own endpoint. You can access the currently cached Friend data like so:
 
@@ -99,33 +90,29 @@ $snapchat->getCachedFriendsResponse();
 If you need to fetch updated Friend data from the server, you will need to call the `getAllUpdates` method.
 
 ```php
-$friendsResponse = $snapchat->getAllUpdates()->getFriendsResponse(); //Friends, Friend Requests
+$friendsResponse = $snapchat->getAllUpdates()->getFriendsResponse(); // Friends, Friend Requests
 ```
 
 In the case above, the `getCachedFriendsResponse()` will now return the updated data.
 
-###Conversations
+### Conversations
 
 Snaps and Chat Messages are both located within `ConversationMessages`. Here's a few examples on how to iterate over them.
 
-####Get all unviewed received Snaps
+#### Get all unviewed received Snaps
 
 ```php
-foreach($conversations as $conversation){
-
+foreach($conversations as $conversation) {
     $snaps = $conversation->getConversationMessages()->getSnaps();
-    foreach($snaps as $snap){
-
-        if($snap->wasReceived() && !$snap->hasBeenViewed()){
-            //Do something with the Unread Snap...
+    foreach($snaps as $snap) {
+        if ($snap->wasReceived() && !$snap->hasBeenViewed()) {
+            // Do something with the unread Snap...
         }
-
     }
-
 }
 ```
 
-###Download Snaps
+### Download Snaps
 
 Unviewed Snaps can be downloaded with via the `downloadSnap` method.
 
@@ -147,64 +134,57 @@ $file_blob = $mediapath->getBlobPath();
 $file_overlay = $mediapath->getOverlayPath();
 
 echo "Blob saved to: " . $file_blob. "\n";
-if($mediapath->overlayExists()){
+
+if ($mediapath->overlayExists()) {
   echo "Overlay saved to: " . $file_overlay. "\n";
 }
 ```
 
-####Download all unviewed received Snaps
+#### Download all unviewed received Snaps
 
 ```php
 $conversations = $login->getConversationsResponse();
-foreach($conversations as $conversation){
-
+foreach ($conversations as $conversation) {
     $snaps = $conversation->getConversationMessages()->getSnaps();
-    
-    foreach($snaps as $snap){
-
-        if($snap->wasReceived() && !$snap->hasBeenViewed()){
-
+    foreach ($snaps as $snap) {
+        if ($snap->wasReceived() && !$snap->hasBeenViewed()) {
             echo "Downloading Snap from: " . $snap->getSender() . "\n";
 
             $filename = sprintf("snaps/%s.%s", $snap->getId(), $snap->getFileExtension());
             $mediapath = $snapchat->downloadSnap($snap, $filename);
 
             echo "Blob saved to: " . $mediapath->getBlobPath(). "\n";
-            if($mediapath->overlayExists()){
+
+            if ($mediapath->overlayExists()) {
                 echo "Overlay saved to: " . $mediapath->getOverlayPath(). "\n";
             }
-
         }
-
     }
-
 }
 ```
 
-###Stories
+### Stories
 
-####Download My Stories
+#### Download My Stories
 
 ```php
-//Get Stories from Login Response
+// Get Stories from Login Response
 $storiesResponse = $login->getStoriesResponse();
 
-foreach($storiesResponse->getMyStories() as $myStories){
+foreach ($storiesResponse->getMyStories() as $myStories) {
+    $story = $myStories->getStory(); // The Story object
+    $storyNotes = $myStories->getStoryNotes(); // Details about who viewed your Story
+    $storyExtras = $myStories->getStoryExtras(); // View and Screenshot counts
 
-    $story = $myStories->getStory(); //The Story object
-    $storyNotes = $myStories->getStoryNotes(); //Details about who viewed your Story
-    $storyExtras = $myStories->getStoryExtras(); //View and Screenshot counts
-
-    //Where to Save the Story
+    // Where to Save the Story
     $filename = sprintf("download/stories/%s.%s", $story->getId(), $story->getFileExtension());
 
-    //Download the Story
+    // Download the Story
     $mediapath = $snapchat->downloadStory($story, $filename);
-
 }
 ```
 
-###Download Friend Stories
+### Download Friend Stories
 
 All of the Stories posted by a User are inside of a container.
 
@@ -217,39 +197,36 @@ Calling `getStories()` method on the `FriendStory` object will return the `Frien
 A `FriendStoryContainer` gives you access to the `Story` object posted by the user along with a boolean stating if you have seen the Story.
 
 ```php
-//Get Stories from Login Response
+// Get Stories from Login Response
 $storiesResponse = $login->getStoriesResponse();
 
-//Iterate Friend Stories
-foreach($storiesResponse->getFriendStories() as $friendStories){
-
+// Iterate Friend Stories
+foreach ($storiesResponse->getFriendStories() as $friendStories) {
     $friendStoriesUsername = $friendStories->getUsername();
     $storiesContainer = $friendStories->getStories();
     
-    foreach($storiesContainer as $storyContainer){
-
+    foreach ($storiesContainer as $storyContainer) {
         $story = $storyContainer->getStory();
 
         echo "Downloading Story: " . $story->getId() . "\n";
 
-        //Where to Save the Files
+        // Where to Save the Files
         $filename = sprintf("download/stories/%s", $story->getId());
         $filename_overlay = sprintf("download/stories/%s_overlay", $story->getId());
 
-        //Download the Story
+        // Download the Story
         $mediapath = $snapchat->downloadStory($story, $filename, $filename_overlay);
 
         echo "Story saved to: " . $mediapath->getBlobPath(). "\n";
-        if($mediapath->overlayExists()){
+
+        if ($mediapath->overlayExists()) {
             echo "Story Overlay saved to: " . $mediapath->getOverlayPath(). "\n";
         }
-
     }
-
 }
 ```
 
-###Logout
+### Logout
 
 To logout of Snapchat, call the `logout` method on the `Snapchat` instance.
 
@@ -257,17 +234,18 @@ To logout of Snapchat, call the `logout` method on the `Snapchat` instance.
 $snapchat->logout();
 ```
 
-##Documentation
+## Documentation
 
 At the moment, there's no proper documentation. However, the above gives you an overview of what the library can do.
 
-[Take a look at the examples](./examples) folder, as well as the methods available in the `Snapchat` class to see what else can be done.
+[Take a look at the examples](./examples) folder, as well as the methods available in the `SnapchatClient` class to see what else can be done.
 
-##Developers
+## Credits
 
 - [liamcottle](https://github.com/liamcottle)
+- [picaboooo](https://github.com/picaboooo)
 
-##Legal
+## Legal
 
 The name "Snapchat" is a copyright of Snapchat™, Inc.
 
