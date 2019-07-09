@@ -4,7 +4,9 @@ namespace Snapchat;
 
 use Exception;
 use GuzzleHttp\Client;
+use JsonMapper_Exception;
 use Picaboooo\PicabooooClient;
+use Picaboooo\PicabooooException;
 use Snapchat\API\Request\AllUpdatesRequest;
 use Snapchat\API\Request\AuthStoryBlobRequest;
 use Snapchat\API\Request\BlobRequest;
@@ -19,6 +21,7 @@ use Snapchat\API\Request\LoginRequest;
 use Snapchat\API\Request\LogoutRequest;
 use Snapchat\API\Request\Model\SendMediaPayload;
 use Snapchat\API\Request\Model\UploadMediaPayload;
+use Snapchat\API\Request\OtpRequest;
 use Snapchat\API\Request\RegisterRequest;
 use Snapchat\API\Request\RegisterUsernameRequest;
 use Snapchat\API\Request\SendMediaRequest;
@@ -135,10 +138,10 @@ class SnapchatClient {
         $this->auth_token = $auth_token;
     }
 
-    public function initDeviceToken($dtoken1i, $dtoken1v)
+    public function initDeviceToken($deviceTokenIdentifier, $deviceTokenVerifier)
     {
-        $this->dtoken1i = $dtoken1i;
-        $this->dtoken1v = $dtoken1v;
+        $this->dtoken1i = $deviceTokenIdentifier;
+        $this->dtoken1v = $deviceTokenVerifier;
     }
 
     public function getUsername(){
@@ -217,26 +220,32 @@ class SnapchatClient {
      *
      * Login to Snapchat with Credentials
      *
-     * @param $username string Snapchat Username
+     * @param $username string Snapchat Username (Can also be email / phone)
      * @param $password string Snapchat Password
+     * @param null|string $preAuthToken
+     * @param null|string $odlvPreAuthToken
+     * @param null|string $otpType
      * @return API\Response\LoginResponse
-     * @throws Exception
+     * @throws JsonMapper_Exception
+     * @throws PicabooooException
+     * @throws SnapchatException
      */
-    public function login($username, $password)
+    public function login($username, $password, $preAuthToken = null, $odlvPreAuthToken = null, $otpType = null)
     {
-        $request = new LoginRequest($this, $username, $password);
+        $request = new LoginRequest($this, $username, $password, $preAuthToken, $odlvPreAuthToken, $otpType);
         $response = $request->execute();
 
+        // Require 2FA with SMS / App (2FA enabled).
+        if ($response->isTwoFaNeeded()) {
+            return $response;
+        }
+
+        // Require 2FA with Email / Phone (Suspicious login).
+        if ($response->isOdlvRequired()) {
+            return $response;
+        }
+
         if ($response->getStatus() != 0) {
-            // TODO: Support 2FA.
-            if ($response->isTwoFaNeeded()) {
-                throw new SnapchatException("Snapchat account requires 2FA (Token).");
-            }
-
-            if ($response->isOdlvRequired()) {
-                throw new SnapchatException("Snapchat account requires 2FA (Email / Phone).");
-            }
-
             throw new SnapchatException(sprintf("[%s] Login Failed: %s", $response->getStatus(), $response->getMessage()));
         }
 
@@ -248,14 +257,21 @@ class SnapchatClient {
         $this->username = $this->cached_updates_response->getUsername();
         $this->auth_token = $this->cached_updates_response->getAuthToken();
 
-        $dtoken1i = $response->getDtoken1i();
-        $dtoken1v = $response->getDtoken1v();
-
-        if (!empty($dtoken1i) && !empty($dtoken1v)) {
-            $this->initDeviceToken($dtoken1i, $dtoken1v);
-        }
-
         return $response;
+    }
+
+    /**
+     * Sends a two factor authentication token to the request verification method.
+     *
+     * @param $username string The username used for login. (Can also be email / phone)
+     * @param $odlvPreAuthToken string
+     * @param $method string Verification method.
+     * @throws PicabooooException
+     */
+    public function requestOneTimePassword($username, $odlvPreAuthToken, $method)
+    {
+        $request = new OtpRequest($this, $username, $odlvPreAuthToken, $method);
+        $request->execute();
     }
 
     /**

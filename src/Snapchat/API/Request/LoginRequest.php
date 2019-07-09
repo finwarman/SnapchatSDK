@@ -33,9 +33,11 @@ class LoginRequest extends Request
      * @param $snapchat SnapchatClient
      * @param $username
      * @param $password
-     * @param null $preAuthToken
+     * @param null|string $preAuthToken
+     * @param null|string $odlvPreAuthToken
+     * @param null|string $otpType
      */
-    public function __construct($snapchat, $username, $password, $preAuthToken = null)
+    public function __construct($snapchat, $username, $password, $preAuthToken = null, $odlvPreAuthToken = null, $otpType = null)
     {
         parent::__construct($snapchat->getClient());
 
@@ -48,6 +50,8 @@ class LoginRequest extends Request
         $this->password = $password;
 
         $this->preAuthToken = $preAuthToken;
+        $this->odlvPreAuthToken = $odlvPreAuthToken;
+        $this->otpType = $otpType;
     }
 
     public function getMethod()
@@ -66,7 +70,7 @@ class LoginRequest extends Request
      *
      * @throws PicabooooException
      * @throws JsonMapper_Exception
-     * @throws SnapchatException
+     * @throws Exception
      * @return LoginResponse
      */
     public function execute()
