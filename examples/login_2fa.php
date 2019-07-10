@@ -3,6 +3,8 @@
 use Snapchat\API\Response\LoginResponse;
 use Snapchat\SnapchatClient;
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
 $username = '';
 $password = '';
 
